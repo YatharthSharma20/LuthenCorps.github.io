@@ -1,0 +1,479 @@
+*{
+    margin: 0;
+    padding: 0;
+    text-decoration: none;
+    font-family: ui-sans-serif, system-ui, sans-serif;
+    box-sizing: border-box;
+}
+
+html, body {
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+}
+
+
+body{
+    height: 100vh;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    position: relative;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/* signup css */
+.main-main-div {
+    width: 90%;
+    height: 83%;
+    max-width: 1400px;
+    background-color: #FFFFFFF2;
+    border-radius: 50px;
+    margin: 105px auto 40px auto; /* top 90px, bottom 40px */
+    padding: 2rem;
+    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+    position: fixed;
+    left: 5%;
+}
+
+
+
+.maindiv{
+    overflow: hidden;
+    text-align: center;
+    height: 100%;
+    width: 100%;
+    border-radius: 30px;
+    padding: 2rem 2rem 2rem 2rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+    max-width: 450px;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.emaildiv label,
+.passdiv label,
+.namediv label {
+  display: block;
+  position: relative;
+  top: -5px; 
+}
+
+.inputbox{
+    text-align: left;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    height: 60%;
+}
+.emailinput{
+    border-radius: 12px;
+    background-color: #FFFFFF;
+    width: 100%;
+    padding: 14px 16px;
+    border: 2px solid #e5e7eb;
+    transition: all 0.3s ease;
+}
+
+.emailinput:focus {
+  border: 2px solid #667eea;
+  outline: none;
+}
+
+.passwordinput:focus{
+    outline: none;
+}
+
+.passwordinput{
+    border: none;
+    border-radius: 12px;
+    background-color: #FFFFFF;
+    width: 100%;
+    padding: 14px 16px;
+    
+}
+
+.passdivchild{
+    border: 2px solid #e5e7eb;
+    background-color: #FFFFFF;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+}
+
+.passdivchild i {
+    margin: 0 10px ;
+    cursor: pointer;
+    user-select: none;
+}
+
+.passdivchild:focus-within {
+    border: 2px solid #667eea;
+}
+
+.forgotpass{
+    color: #7d8dd7;;
+    text-decoration: none;
+    text-align: right;
+    display: block;
+    font-size: 14px;
+    font-weight: bold;
+    margin-top: 5px;
+}
+.forgotpass:hover {
+    color: #764ba2;
+}
+
+.loginbut{
+    border-radius: 12px;
+    width: 100%;
+    padding: 14px 16px;
+    font-weight: bold;
+    font-size: 0.938rem;
+    color: #ffffff;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border: none;
+    transition: all 0.3s ease;
+    cursor: pointer;
+}
+
+.loginbut:hover{
+    transform: translateY(-2px);
+    border-color: #667eea;
+    box-shadow: 0 6px 20px rgba(102, 126, 234, 0.5);
+}
+
+.loginbut:active{
+    transform: translateY(1px);
+}
+
+.ordiv {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-evenly;
+}
+
+.orcdiv{
+    height: 1%;
+    background-color: #9ca3af;
+    width: 27%;
+}
+
+.ordiv p {
+    padding: 0 1rem 0 1rem;
+    font-size: 0.875rem;
+    color: #9ca3af;
+}
+
+.googlelog{
+    cursor: pointer;
+    display: flex;
+    border: 2px solid #e5e7eb;
+    border-radius: 12px;
+    background-color: #FFFFFF;
+    width: 100%;
+    padding: 14px 16px;
+    justify-content: center;
+    align-items: center;
+    transition: all 0.3s ease;
+}
+
+.googlelog:hover{
+    border-color: #667eea;
+    box-shadow: 0 6px 20px rgba(102, 126, 234, 0.5);
+}
+
+.signup{
+    font-size: 0.875rem;
+}
+.signup p {
+    color: #6b7280;
+}
+.signup a  {
+    color: #7d8dd7;;
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: bold;
+    margin-top: 5px;
+}
+
+.signup a:hover {
+    color: #764ba2;
+}
+
+@media (max-width: 516px) {
+    .maindiv {
+      height: 100%;
+      width: 100%;
+      border-radius: 0;
+    }
+  }
+
+  @media (max-width:1040px) {
+    .main-main-div {
+        margin: 90px auto 40px auto;
+        height: 84%;
+    }
+    
+  }
+@media (max-width:423px) {
+    .main-main-div{
+        height: 82%;
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+/* navigation bar styling */
+.navbar{
+    background-color: white;
+    width: 90%;
+    max-width: 1400px;
+    height: 70px;
+    position: fixed;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    border-radius: 50px;
+    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+    z-index: 1000;
+    transition: all 0.3s ease;
+}
+
+.navbar.menu-open {
+    border-radius: 25px 25px 0 0;
+}
+
+#PixoraLogo{
+    height: 40px;
+}
+
+.navdiv{
+    height: 70px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 30px;
+}
+
+li{
+    display: inline-block;
+}
+
+.nev-butn{
+    color: #00000099;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
+    font-size: 14px;
+    font-weight: 600;
+    padding: 4px 8px;
+    transition: all 0.2s ease-in-out;
+    border-radius: 4px;
+    margin-right: 36px;
+}
+
+.nev-butn:hover{
+    color: black;
+    background-color: #f0f0f0;
+}
+
+#home{
+    color: #CD509E;
+}
+
+@media(max-width:1200px){
+    .navdiv{
+        margin-left: 5%;
+        margin-right: 5%;
+    }
+}
+
+.hamburger{
+    display: none;
+    flex-direction: column;
+    background-color: transparent;
+    cursor: pointer;
+    padding: 8px;
+    border: none;
+    border-radius: 4px;
+    transition: background-color 0.2s ease;
+
+}
+
+.hamburger:hover{
+    background-color: #f0f0f0;
+}
+
+.bar{
+    width: 24px;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    height: 2px;
+    margin-top: 3px;
+    transition: all 0.3s ease;
+    border-radius: 2px;
+}
+
+.hamburger.action .bar:nth-child(1) {
+    transform: translateY(5px) rotate(45deg);
+}
+
+.hamburger.action .bar:nth-child(2) {
+    opacity: 0;
+}
+
+.hamburger.action .bar:nth-child(3) {
+    transform: translateY(-5px) rotate(-45deg);
+}
+
+#overlay {
+    position: fixed;
+    width: 100%;
+    top: 0;
+    left: 0;
+    height: 100vh;
+    background-color: rgba(0, 0, 0, 0);
+    z-index: 998;
+    opacity: 0;
+    pointer-events: none;
+    transition: all 0.3s ease;
+}
+
+#overlay.action {
+    background-color: rgba(0, 0, 0, 0.4);
+    opacity: 1;
+    pointer-events: all;
+}
+
+@media (max-width:1040px) {
+
+    #PixoraLogo {
+        height: 35px;
+    }
+    .hamburger {
+        display: flex;
+    }
+
+    .navbar {
+        width: 90%;
+        top: 15px;
+        height: 60px;
+    }
+
+    .navdiv {
+        height: 60px;
+        padding: 0 20px;
+    }
+
+    ul {
+        list-style: none;
+        margin: 0;
+        padding: 0;
+    }
+
+    /* Dropdown menu from top */
+    #nav-menu {
+        position: absolute;
+        top: 60px;
+        left: 0;
+        right: 0;
+        width: 100%;
+        background-color: white;
+        flex-direction: column;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+        border-radius: 0 0 25px 25px;
+        overflow: hidden;
+        max-height: 0;
+        transition: max-height 0.4s ease;
+        z-index: 999;
+    }
+
+    #nav-menu.active {
+        max-height: 400px;
+        padding: 15px 0;
+    }
+
+    li {
+        display: block;
+        opacity: 0;
+        transform: translateY(-10px);
+        transition: all 0.3s ease;
+        text-align: left;
+    }
+
+    #nav-menu.active li {
+        opacity: 1;
+        transform: translateY(0);
+    }
+
+    li:nth-child(1) { transition-delay: 0.1s; }
+    li:nth-child(2) { transition-delay: 0.15s; }
+    li:nth-child(3) { transition-delay: 0.2s; }
+    li:nth-child(4) { transition-delay: 0.25s; }
+    li:nth-child(5) { transition-delay: 0.3s; }
+    li:nth-child(6) { transition-delay: 0.35s; }
+
+    .nev-butn {
+        display: block;
+        font-size: 16px;
+        padding: 15px 30px;
+        width: 100%;
+        border-bottom: 1px solid #f0f0f0;
+        margin-right: 0;
+        border-radius: 0;
+    }
+
+    .nev-butn:hover {
+        background-color: #f0f0f0;
+        padding-left: 40px;
+    }
+}
