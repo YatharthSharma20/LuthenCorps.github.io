@@ -1,33 +1,1084 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>WEBPAGE</title>
-    <link rel="stylesheet" href="style.css">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LuthenCorps — Affiliate Management Agency</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #060608;
+    --bg2: #0d0d12;
+    --surface: #111118;
+    --border: rgba(255,255,255,0.07);
+    --accent: #c8f04a;
+    --accent2: #7b5cff;
+    --text: #f0f0f5;
+    --muted: #6b6b80;
+    --card: #13131c;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 16px;
+    line-height: 1.6;
+    overflow-x: hidden;
+  }
+
+  /* NOISE OVERLAY */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.035'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 1000;
+    opacity: 0.4;
+  }
+
+  /* NAV */
+  nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 900;
+    padding: 20px 5%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 1px solid var(--border);
+    backdrop-filter: blur(20px);
+    background: rgba(6,6,8,0.8);
+  }
+
+  .nav-logo {
+    font-family: 'Syne', sans-serif;
+    font-weight: 800;
+    font-size: 1.3rem;
+    letter-spacing: -0.5px;
+    color: var(--text);
+    text-decoration: none;
+  }
+
+  .nav-logo span { color: var(--accent); }
+
+  .nav-links {
+    display: flex;
+    gap: 36px;
+    list-style: none;
+  }
+
+  .nav-links a {
+    color: var(--muted);
+    text-decoration: none;
+    font-size: 0.9rem;
+    font-weight: 500;
+    transition: color 0.2s;
+  }
+
+  .nav-links a:hover { color: var(--text); }
+
+  .nav-cta {
+    background: var(--accent);
+    color: #000;
+    font-weight: 700;
+    font-size: 0.88rem;
+    padding: 10px 22px;
+    border-radius: 100px;
+    text-decoration: none;
+    transition: opacity 0.2s, transform 0.2s;
+  }
+
+  .nav-cta:hover { opacity: 0.85; transform: translateY(-1px); }
+
+  /* HERO */
+  .hero {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 130px 5% 80px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .hero-glow {
+    position: absolute;
+    width: 700px;
+    height: 700px;
+    background: radial-gradient(circle, rgba(123,92,255,0.18) 0%, transparent 70%);
+    top: -100px;
+    right: -150px;
+    pointer-events: none;
+  }
+
+  .hero-glow2 {
+    position: absolute;
+    width: 500px;
+    height: 500px;
+    background: radial-gradient(circle, rgba(200,240,74,0.1) 0%, transparent 70%);
+    bottom: 0;
+    left: 10%;
+    pointer-events: none;
+  }
+
+  .hero-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(200,240,74,0.08);
+    border: 1px solid rgba(200,240,74,0.2);
+    color: var(--accent);
+    font-size: 0.82rem;
+    font-weight: 600;
+    padding: 6px 14px;
+    border-radius: 100px;
+    margin-bottom: 32px;
+    width: fit-content;
+    animation: fadeUp 0.6s ease both;
+  }
+
+  .hero-badge::before {
+    content: '';
+    width: 6px; height: 6px;
+    background: var(--accent);
+    border-radius: 50%;
+    animation: pulse 2s infinite;
+  }
+
+  @keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.3; }
+  }
+
+  .hero h1 {
+    font-family: 'Syne', sans-serif;
+    font-weight: 800;
+    font-size: clamp(3rem, 7vw, 6.5rem);
+    line-height: 1.0;
+    letter-spacing: -2px;
+    max-width: 900px;
+    animation: fadeUp 0.6s 0.1s ease both;
+  }
+
+  .hero h1 em {
+    font-style: normal;
+    color: var(--accent);
+    position: relative;
+  }
+
+  .hero-sub {
+    margin-top: 28px;
+    font-size: 1.1rem;
+    color: var(--muted);
+    max-width: 520px;
+    font-weight: 300;
+    line-height: 1.7;
+    animation: fadeUp 0.6s 0.2s ease both;
+  }
+
+  .hero-actions {
+    margin-top: 44px;
+    display: flex;
+    gap: 16px;
+    flex-wrap: wrap;
+    animation: fadeUp 0.6s 0.3s ease both;
+  }
+
+  .btn-primary {
+    background: var(--accent);
+    color: #000;
+    font-weight: 700;
+    font-size: 0.95rem;
+    padding: 14px 32px;
+    border-radius: 100px;
+    text-decoration: none;
+    transition: transform 0.2s, box-shadow 0.2s;
+    box-shadow: 0 0 40px rgba(200,240,74,0.25);
+  }
+
+  .btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 0 60px rgba(200,240,74,0.4);
+  }
+
+  .btn-outline {
+    background: transparent;
+    color: var(--text);
+    font-weight: 500;
+    font-size: 0.95rem;
+    padding: 14px 32px;
+    border-radius: 100px;
+    text-decoration: none;
+    border: 1px solid var(--border);
+    transition: border-color 0.2s, background 0.2s;
+  }
+
+  .btn-outline:hover {
+    border-color: rgba(255,255,255,0.2);
+    background: rgba(255,255,255,0.04);
+  }
+
+  /* STATS ROW */
+  .stats {
+    margin-top: 80px;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1px;
+    max-width: 600px;
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    overflow: hidden;
+    animation: fadeUp 0.6s 0.4s ease both;
+  }
+
+  .stat {
+    padding: 24px 28px;
+    background: var(--card);
+  }
+
+  .stat:not(:last-child) {
+    border-right: 1px solid var(--border);
+  }
+
+  .stat-num {
+    font-family: 'Syne', sans-serif;
+    font-weight: 800;
+    font-size: 2rem;
+    color: var(--accent);
+    line-height: 1;
+  }
+
+  .stat-label {
+    font-size: 0.8rem;
+    color: var(--muted);
+    margin-top: 4px;
+  }
+
+  /* MARQUEE */
+  .marquee-section {
+    padding: 40px 0;
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+    overflow: hidden;
+    background: var(--bg2);
+  }
+
+  .marquee-track {
+    display: flex;
+    gap: 60px;
+    animation: marquee 20s linear infinite;
+    white-space: nowrap;
+    width: max-content;
+  }
+
+  .marquee-item {
+    font-family: 'Syne', sans-serif;
+    font-weight: 700;
+    font-size: 0.85rem;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--muted);
+    display: flex;
+    align-items: center;
+    gap: 20px;
+  }
+
+  .marquee-dot {
+    width: 5px; height: 5px;
+    background: var(--accent);
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+
+  @keyframes marquee {
+    from { transform: translateX(0); }
+    to { transform: translateX(-50%); }
+  }
+
+  /* SECTION COMMONS */
+  section {
+    padding: 100px 5%;
+  }
+
+  .section-tag {
+    font-size: 0.78rem;
+    font-weight: 700;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 20px;
+  }
+
+  .section-title {
+    font-family: 'Syne', sans-serif;
+    font-weight: 800;
+    font-size: clamp(2rem, 4vw, 3.2rem);
+    line-height: 1.1;
+    letter-spacing: -1px;
+    max-width: 700px;
+  }
+
+  .section-sub {
+    color: var(--muted);
+    font-size: 1rem;
+    max-width: 500px;
+    margin-top: 16px;
+    line-height: 1.7;
+  }
+
+  /* SERVICES */
+  .services-grid {
+    margin-top: 60px;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 2px;
+  }
+
+  .service-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    padding: 40px 36px;
+    position: relative;
+    overflow: hidden;
+    transition: border-color 0.3s, transform 0.3s;
+    cursor: default;
+  }
+
+  .service-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, var(--accent), var(--accent2));
+    transform: scaleX(0);
+    transition: transform 0.3s;
+    transform-origin: left;
+  }
+
+  .service-card:hover::before { transform: scaleX(1); }
+  .service-card:hover {
+    border-color: rgba(255,255,255,0.12);
+    transform: translateY(-4px);
+  }
+
+  .service-icon {
+    width: 48px; height: 48px;
+    border-radius: 12px;
+    background: rgba(200,240,74,0.08);
+    border: 1px solid rgba(200,240,74,0.15);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.4rem;
+    margin-bottom: 24px;
+  }
+
+  .service-num {
+    position: absolute;
+    top: 28px; right: 28px;
+    font-family: 'Syne', sans-serif;
+    font-size: 0.75rem;
+    color: rgba(255,255,255,0.1);
+    font-weight: 700;
+  }
+
+  .service-card h3 {
+    font-family: 'Syne', sans-serif;
+    font-weight: 700;
+    font-size: 1.15rem;
+    margin-bottom: 12px;
+  }
+
+  .service-card p {
+    color: var(--muted);
+    font-size: 0.9rem;
+    line-height: 1.65;
+  }
+
+  /* HOW IT WORKS */
+  .how-section {
+    background: var(--bg2);
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+  }
+
+  .how-inner {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 80px;
+    align-items: center;
+  }
+
+  .steps {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    margin-top: 48px;
+  }
+
+  .step {
+    display: flex;
+    gap: 24px;
+    padding: 28px 0;
+    border-bottom: 1px solid var(--border);
+    position: relative;
+  }
+
+  .step:last-child { border-bottom: none; }
+
+  .step-num {
+    font-family: 'Syne', sans-serif;
+    font-weight: 800;
+    font-size: 0.75rem;
+    color: var(--accent);
+    width: 32px;
+    flex-shrink: 0;
+    padding-top: 4px;
+  }
+
+  .step h4 {
+    font-family: 'Syne', sans-serif;
+    font-weight: 700;
+    font-size: 1rem;
+    margin-bottom: 6px;
+  }
+
+  .step p {
+    color: var(--muted);
+    font-size: 0.88rem;
+    line-height: 1.6;
+  }
+
+  .how-visual {
+    position: relative;
+  }
+
+  .how-card-stack {
+    position: relative;
+    height: 420px;
+  }
+
+  .flow-card {
+    position: absolute;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 24px;
+  }
+
+  .flow-card-main {
+    width: 100%;
+    top: 0;
+    left: 0;
+    right: 0;
+    padding: 32px;
+  }
+
+  .flow-card-main h3 {
+    font-family: 'Syne', sans-serif;
+    font-weight: 800;
+    font-size: 1.1rem;
+    margin-bottom: 20px;
+  }
+
+  .flow-metric {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 0;
+    border-bottom: 1px solid var(--border);
+    font-size: 0.88rem;
+  }
+
+  .flow-metric:last-child { border-bottom: none; }
+
+  .flow-metric-label { color: var(--muted); }
+
+  .flow-metric-val {
+    font-weight: 700;
+    font-family: 'Syne', sans-serif;
+    color: var(--accent);
+  }
+
+  .flow-card-small {
+    width: 180px;
+    bottom: 0;
+    right: 0;
+    border-radius: 14px;
+    background: linear-gradient(135deg, rgba(123,92,255,0.15), rgba(200,240,74,0.08));
+    border-color: rgba(123,92,255,0.3);
+    text-align: center;
+  }
+
+  .flow-card-small .big-num {
+    font-family: 'Syne', sans-serif;
+    font-size: 2.5rem;
+    font-weight: 800;
+    color: var(--accent);
+  }
+
+  .flow-card-small .small-label {
+    font-size: 0.78rem;
+    color: var(--muted);
+  }
+
+  /* WHY US */
+  .why-grid {
+    margin-top: 60px;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 20px;
+  }
+
+  .why-card {
+    padding: 28px;
+    border-radius: 16px;
+    border: 1px solid var(--border);
+    background: var(--card);
+    transition: border-color 0.3s;
+  }
+
+  .why-card:hover { border-color: rgba(200,240,74,0.25); }
+
+  .why-icon {
+    font-size: 1.8rem;
+    margin-bottom: 16px;
+  }
+
+  .why-card h4 {
+    font-family: 'Syne', sans-serif;
+    font-weight: 700;
+    font-size: 0.95rem;
+    margin-bottom: 8px;
+  }
+
+  .why-card p {
+    color: var(--muted);
+    font-size: 0.85rem;
+    line-height: 1.6;
+  }
+
+  /* FOR WHO */
+  .for-section {
+    background: var(--bg2);
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+  }
+
+  .for-grid {
+    margin-top: 60px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+  }
+
+  .for-card {
+    border-radius: 20px;
+    border: 1px solid var(--border);
+    overflow: hidden;
+  }
+
+  .for-card-head {
+    padding: 28px 32px;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+
+  .for-card-icon {
+    width: 44px; height: 44px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.3rem;
+    flex-shrink: 0;
+  }
+
+  .for-brands .for-card-icon { background: rgba(200,240,74,0.1); }
+  .for-affiliates .for-card-icon { background: rgba(123,92,255,0.1); }
+
+  .for-card-head h3 {
+    font-family: 'Syne', sans-serif;
+    font-weight: 700;
+    font-size: 1.05rem;
+  }
+
+  .for-card-head p { color: var(--muted); font-size: 0.85rem; }
+
+  .for-card-body {
+    padding: 28px 32px;
+    background: var(--card);
+  }
+
+  .for-list {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .for-list li {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    font-size: 0.9rem;
+    color: var(--muted);
+  }
+
+  .for-list li::before {
+    content: '✓';
+    color: var(--accent);
+    font-weight: 700;
+    flex-shrink: 0;
+    margin-top: 1px;
+  }
+
+  /* CTA */
+  .cta-section {
+    text-align: center;
+    padding: 120px 5%;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .cta-section::before {
+    content: '';
+    position: absolute;
+    width: 600px; height: 600px;
+    background: radial-gradient(circle, rgba(123,92,255,0.15) 0%, transparent 70%);
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    pointer-events: none;
+  }
+
+  .cta-section h2 {
+    font-family: 'Syne', sans-serif;
+    font-weight: 800;
+    font-size: clamp(2.2rem, 5vw, 4rem);
+    line-height: 1.1;
+    letter-spacing: -1.5px;
+    max-width: 700px;
+    margin: 0 auto 20px;
+  }
+
+  .cta-section p {
+    color: var(--muted);
+    font-size: 1rem;
+    max-width: 440px;
+    margin: 0 auto 44px;
+    line-height: 1.7;
+  }
+
+  .cta-actions {
+    display: flex;
+    gap: 14px;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+
+  /* FOOTER */
+  footer {
+    border-top: 1px solid var(--border);
+    padding: 48px 5%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 20px;
+  }
+
+  .footer-logo {
+    font-family: 'Syne', sans-serif;
+    font-weight: 800;
+    font-size: 1.1rem;
+    color: var(--text);
+    text-decoration: none;
+  }
+
+  .footer-logo span { color: var(--accent); }
+
+  .footer-links {
+    display: flex;
+    gap: 28px;
+    list-style: none;
+  }
+
+  .footer-links a {
+    color: var(--muted);
+    font-size: 0.85rem;
+    text-decoration: none;
+    transition: color 0.2s;
+  }
+
+  .footer-links a:hover { color: var(--text); }
+
+  .footer-copy {
+    color: var(--muted);
+    font-size: 0.8rem;
+  }
+
+  /* ANIMATIONS */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(24px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .reveal {
+    opacity: 0;
+    transform: translateY(30px);
+    transition: opacity 0.7s ease, transform 0.7s ease;
+  }
+
+  .reveal.visible {
+    opacity: 1;
+    transform: none;
+  }
+
+  /* RESPONSIVE */
+  @media (max-width: 768px) {
+    nav { padding: 16px 5%; }
+    .nav-links { display: none; }
+    .hero h1 { font-size: 2.8rem; letter-spacing: -1px; }
+    .stats { grid-template-columns: 1fr; max-width: 100%; }
+    .stat:not(:last-child) { border-right: none; border-bottom: 1px solid var(--border); }
+    .how-inner { grid-template-columns: 1fr; gap: 40px; }
+    .how-card-stack { height: 300px; }
+    .for-grid { grid-template-columns: 1fr; }
+    .services-grid { grid-template-columns: 1fr; }
+  }
+</style>
 </head>
 <body>
-    <nav class="navbar">
-        <div class="navdiv">
-            <a href="#" id="logo"><img id="PixoraLogo" src="Pixora_img_wbg.png" alt="Sleave"></a>
-            <ul id="nav-menu">
-                <li><a href="#" id="home" class="nev-butn">Home</a></li>
-                <li><a href="#" class="nev-butn">Features</a></li>
-                <li><a href="#" class="nev-butn">How it Works</a></li>
-                <li><a href="#" class="nev-butn">Samples</a></li>
-                <li><a href="signup.html" class="nev-butn">Sign up</a></li>
-                <li><a href="signin.html" class="nev-butn">Sign in</a></li>
-            </ul>
 
-            <button class="hamburger" id="hamburger">
-                <span class="bar"></span>
-                <span class="bar"></span>
-                <span class="bar"></span>
-            </button>
+<!-- NAV -->
+<nav>
+  <a class="nav-logo" href="#">Luthen<span>Corps</span></a>
+  <ul class="nav-links">
+    <li><a href="#services">Services</a></li>
+    <li><a href="#how">How It Works</a></li>
+    <li><a href="#who">For Who</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+  <a class="nav-cta" href="#contact">Get Started →</a>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-glow"></div>
+  <div class="hero-glow2"></div>
+
+  <div class="hero-badge">India's Premier Affiliate Management Agency</div>
+
+  <h1>We Connect <em>Brands</em> with the Right <em>Affiliates</em></h1>
+
+  <p class="hero-sub">We build and manage high-performing affiliate programs — recruiting the best partners, tracking every rupee, and growing your revenue on autopilot.</p>
+
+  <div class="hero-actions">
+    <a class="btn-primary" href="#contact">Work With Us →</a>
+    <a class="btn-outline" href="#how">See How It Works</a>
+  </div>
+
+  <div class="stats">
+    <div class="stat">
+      <div class="stat-num">Growing</div>
+      <div class="stat-label">Affiliate Network</div>
+    </div>
+    <div class="stat">
+      <div class="stat-num">30+</div>
+      <div class="stat-label">Brand Clients</div>
+    </div>
+    <div class="stat">
+      <div class="stat-num">₹5Cr+</div>
+      <div class="stat-label">Monthly Revenue Driven</div>
+    </div>
+  </div>
+</section>
+
+<!-- MARQUEE -->
+<div class="marquee-section">
+  <div class="marquee-track">
+    <div class="marquee-item"><span class="marquee-dot"></span>Affiliate Recruitment</div>
+    <div class="marquee-item"><span class="marquee-dot"></span>Program Management</div>
+    <div class="marquee-item"><span class="marquee-dot"></span>Performance Tracking</div>
+    <div class="marquee-item"><span class="marquee-dot"></span>Revenue Growth</div>
+    <div class="marquee-item"><span class="marquee-dot"></span>Brand Partnerships</div>
+    <div class="marquee-item"><span class="marquee-dot"></span>Influencer Affiliates</div>
+    <div class="marquee-item"><span class="marquee-dot"></span>Commission Strategy</div>
+    <div class="marquee-item"><span class="marquee-dot"></span>Fraud Prevention</div>
+    <!-- repeat for loop -->
+    <div class="marquee-item"><span class="marquee-dot"></span>Affiliate Recruitment</div>
+    <div class="marquee-item"><span class="marquee-dot"></span>Program Management</div>
+    <div class="marquee-item"><span class="marquee-dot"></span>Performance Tracking</div>
+    <div class="marquee-item"><span class="marquee-dot"></span>Revenue Growth</div>
+    <div class="marquee-item"><span class="marquee-dot"></span>Brand Partnerships</div>
+    <div class="marquee-item"><span class="marquee-dot"></span>Influencer Affiliates</div>
+    <div class="marquee-item"><span class="marquee-dot"></span>Commission Strategy</div>
+    <div class="marquee-item"><span class="marquee-dot"></span>Fraud Prevention</div>
+  </div>
+</div>
+
+<!-- SERVICES -->
+<section id="services">
+  <div class="reveal">
+    <div class="section-tag">What We Do</div>
+    <h2 class="section-title">Everything Your Affiliate Program Needs</h2>
+    <p class="section-sub">From finding the right affiliates to optimizing commissions — we handle it all so you can focus on your product.</p>
+  </div>
+
+  <div class="services-grid reveal">
+    <div class="service-card">
+      <div class="service-icon">🎯</div>
+      <span class="service-num">01</span>
+      <h3>Affiliate Recruitment</h3>
+      <p>We identify, vet, and onboard top-performing affiliates, influencers, and content creators that align with your brand and audience.</p>
+    </div>
+    <div class="service-card">
+      <div class="service-icon">⚙️</div>
+      <span class="service-num">02</span>
+      <h3>Program Management</h3>
+      <p>Full end-to-end management of your affiliate program on Impact.com — approvals, communications, agreements, and daily operations.</p>
+    </div>
+    <div class="service-card">
+      <div class="service-icon">📊</div>
+      <span class="service-num">03</span>
+      <h3>Performance Analytics</h3>
+      <p>Deep-dive reports on clicks, conversions, and ROI. We track every affiliate's performance and cut what doesn't convert.</p>
+    </div>
+    <div class="service-card">
+      <div class="service-icon">💰</div>
+      <span class="service-num">04</span>
+      <h3>Commission Strategy</h3>
+      <p>We design commission structures that motivate your best affiliates while protecting your margins and maximizing net revenue.</p>
+    </div>
+    <div class="service-card">
+      <div class="service-icon">🛡️</div>
+      <span class="service-num">05</span>
+      <h3>Fraud Prevention</h3>
+      <p>We monitor affiliate traffic for suspicious patterns and eliminate low-quality, fraudulent, or brand-damaging partners instantly.</p>
+    </div>
+    <div class="service-card">
+      <div class="service-icon">🚀</div>
+      <span class="service-num">06</span>
+      <h3>Growth Scaling</h3>
+      <p>Once the foundation is solid, we scale your program aggressively — expanding to new affiliate categories, geos, and platforms.</p>
+    </div>
+  </div>
+</section>
+
+<!-- HOW IT WORKS -->
+<section class="how-section" id="how">
+  <div class="how-inner">
+    <div>
+      <div class="section-tag reveal">How It Works</div>
+      <h2 class="section-title reveal">From Zero to a Thriving Affiliate Program</h2>
+
+      <div class="steps">
+        <div class="step reveal">
+          <div class="step-num">01</div>
+          <div>
+            <h4>Discovery & Strategy</h4>
+            <p>We audit your brand, understand your goals, and design a custom affiliate program strategy with the right commission model.</p>
+          </div>
         </div>
-    </nav>
+        <div class="step reveal">
+          <div class="step-num">02</div>
+          <div>
+            <h4>Setup & Launch</h4>
+            <p>We configure your program on Impact.com, create creatives and affiliate materials, and officially launch to our network.</p>
+          </div>
+        </div>
+        <div class="step reveal">
+          <div class="step-num">03</div>
+          <div>
+            <h4>Recruit & Activate</h4>
+            <p>We reach out to and onboard top affiliates — bloggers, influencers, deal sites, and coupon platforms relevant to your niche.</p>
+          </div>
+        </div>
+        <div class="step reveal">
+          <div class="step-num">04</div>
+          <div>
+            <h4>Optimize & Scale</h4>
+            <p>Monthly reporting, affiliate coaching, commission adjustments, and aggressive expansion to maximize your revenue.</p>
+          </div>
+        </div>
+      </div>
+    </div>
 
-    <div id="overlay"></div>
-    <script src="script.js"></script>
+    <div class="how-visual reveal">
+      <div class="how-card-stack">
+        <div class="flow-card flow-card-main">
+          <h3>Program Dashboard</h3>
+          <div class="flow-metric">
+            <span class="flow-metric-label">Active Affiliates</span>
+            <span class="flow-metric-val">147</span>
+          </div>
+          <div class="flow-metric">
+            <span class="flow-metric-label">Monthly Clicks</span>
+            <span class="flow-metric-val">84,300</span>
+          </div>
+          <div class="flow-metric">
+            <span class="flow-metric-label">Conversions</span>
+            <span class="flow-metric-val">2,140</span>
+          </div>
+          <div class="flow-metric">
+            <span class="flow-metric-label">Revenue Driven</span>
+            <span class="flow-metric-val">₹42.6L</span>
+          </div>
+          <div class="flow-metric">
+            <span class="flow-metric-label">Avg. ROAS</span>
+            <span class="flow-metric-val">8.4×</span>
+          </div>
+        </div>
+        <div class="flow-card flow-card-small">
+          <div class="big-num">↑38%</div>
+          <div class="small-label">MoM Growth</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- WHY US -->
+<section>
+  <div class="reveal">
+    <div class="section-tag">Why LuthenCorps</div>
+    <h2 class="section-title">Built Different. Results-Obsessed.</h2>
+    <p class="section-sub">We're not a generic digital agency. We live and breathe affiliate marketing — and it shows in our numbers.</p>
+  </div>
+
+  <div class="why-grid reveal">
+    <div class="why-card">
+      <div class="why-icon">🤝</div>
+      <h4>True Partnership</h4>
+      <p>We're invested in your growth. Our success is tied to yours — we win when you win.</p>
+    </div>
+    <div class="why-card">
+      <div class="why-icon">🏎️</div>
+      <h4>Fast Onboarding</h4>
+      <p>Your program is live within 7 days. No lengthy contracts, no bureaucracy — just results.</p>
+    </div>
+    <div class="why-card">
+      <div class="why-icon">🧠</div>
+      <h4>Deep Expertise</h4>
+      <p>We've managed 30+ affiliate programs across fashion, D2C, SaaS, and e-commerce verticals.</p>
+    </div>
+    <div class="why-card">
+      <div class="why-icon">🌐</div>
+      <h4>Large Network</h4>
+      <p>We actively recruit and onboard the right affiliates for your niche — quality over quantity, every time.</p>
+    </div>
+    <div class="why-card">
+      <div class="why-icon">📈</div>
+      <h4>Data-Driven</h4>
+      <p>Every decision we make is backed by data. No guesswork — just clear metrics and accountability.</p>
+    </div>
+    <div class="why-card">
+      <div class="why-icon">🔒</div>
+      <h4>Brand Safe</h4>
+      <p>We carefully vet every affiliate to ensure your brand is only represented in quality environments.</p>
+    </div>
+  </div>
+</section>
+
+<!-- FOR WHO -->
+<section class="for-section" id="who">
+  <div class="reveal" style="text-align: center; margin-bottom: 20px;">
+    <div class="section-tag" style="display: inline-block;">Who We Serve</div>
+    <h2 class="section-title" style="margin: 0 auto; text-align: center;">Built For Brands & Affiliates</h2>
+  </div>
+
+  <div class="for-grid reveal">
+    <div class="for-card for-brands">
+      <div class="for-card-head">
+        <div class="for-card-icon">🏢</div>
+        <div>
+          <h3>For Brands</h3>
+          <p>Want affiliates promoting your products?</p>
+        </div>
+      </div>
+      <div class="for-card-body">
+        <ul class="for-list">
+          <li>Get a fully managed affiliate program</li>
+          <li>We recruit the right affiliates tailored to your brand</li>
+          <li>Pay only for actual conversions (performance model)</li>
+          <li>Full Impact.com program setup & management</li>
+          <li>Monthly performance reports & strategy calls</li>
+          <li>Brand-safe affiliate vetting & compliance</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="for-card for-affiliates">
+      <div class="for-card-head">
+        <div class="for-card-icon">👤</div>
+        <div>
+          <h3>For Affiliates</h3>
+          <p>Want premium brands to promote?</p>
+        </div>
+      </div>
+      <div class="for-card-body">
+        <ul class="for-list">
+          <li>Access exclusive brand partnership opportunities</li>
+          <li>Competitive commission rates (up to 20%)</li>
+          <li>Fast approvals — get started in 24 hours</li>
+          <li>Dedicated account manager for support</li>
+          <li>Timely & reliable commission payouts</li>
+          <li>Co-branded creatives & promotional materials</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="cta-section" id="contact">
+  <div class="section-tag reveal" style="display: inline-block; margin-bottom: 24px;">Let's Talk</div>
+  <h2 class="reveal">Ready to Scale Your<br>Affiliate Revenue?</h2>
+  <p class="reveal">Book a free strategy call. We'll audit your current setup (or start from scratch) and show you exactly how we'll grow your program.</p>
+  <div class="cta-actions reveal">
+    <a class="btn-primary" href="mailto:hello@luthencorps.com">Book a Free Call →</a>
+    <a class="btn-outline" href="mailto:hello@luthencorps.com">Email Us</a>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <a class="footer-logo" href="#">Luthen<span>Corps</span></a>
+  <ul class="footer-links">
+    <li><a href="#services">Services</a></li>
+    <li><a href="#how">How It Works</a></li>
+    <li><a href="#who">For Who</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+  <div class="footer-copy">© 2026 LuthenCorps. All rights reserved.</div>
+</footer>
+
+<script>
+  // Scroll reveal
+  const reveals = document.querySelectorAll('.reveal');
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach((entry, i) => {
+      if (entry.isIntersecting) {
+        setTimeout(() => entry.target.classList.add('visible'), i * 80);
+        observer.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.1 });
+  reveals.forEach(el => observer.observe(el));
+
+  // Nav shrink on scroll
+  const nav = document.querySelector('nav');
+  window.addEventListener('scroll', () => {
+    nav.style.padding = window.scrollY > 50 ? '12px 5%' : '20px 5%';
+  });
+</script>
 </body>
 </html>
