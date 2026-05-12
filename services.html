@@ -1,0 +1,1149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Services — LuthenCorps</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #060608;
+    --bg2: #0d0d12;
+    --border: rgba(255,255,255,0.07);
+    --accent: #c8f04a;
+    --accent2: #7b5cff;
+    --text: #f0f0f5;
+    --muted: #6b6b80;
+    --card: #13131c;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 16px;
+    line-height: 1.6;
+    overflow-x: hidden;
+  }
+
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.035'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 0; /* FIX #1: was z-index:1000 — decorative overlay must never stack above interactive elements */
+    opacity: 0.4;
+  }
+
+  /* NAV */
+  nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 900;
+    padding: 20px 5%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 1px solid var(--border);
+    backdrop-filter: blur(20px);
+    background: rgba(6,6,8,0.8);
+    transition: padding 0.3s;
+  }
+
+  .nav-logo {
+    font-family: 'Syne', sans-serif;
+    font-weight: 800;
+    font-size: 1.3rem;
+    color: var(--text);
+    text-decoration: none;
+  }
+
+  .nav-logo span { color: var(--accent); }
+
+  .nav-links {
+    display: flex;
+    gap: 36px;
+    list-style: none;
+  }
+
+  .nav-links a {
+    color: var(--muted);
+    text-decoration: none;
+    font-size: 0.9rem;
+    font-weight: 500;
+    transition: color 0.2s;
+  }
+
+  .nav-links a:hover, .nav-links a.active { color: var(--text); }
+
+  .nav-cta {
+    background: var(--accent);
+    color: #000;
+    font-weight: 700;
+    font-size: 0.88rem;
+    padding: 10px 22px;
+    border-radius: 100px;
+    text-decoration: none;
+    transition: opacity 0.2s, transform 0.2s;
+  }
+
+  .nav-cta:hover { opacity: 0.85; transform: translateY(-1px); }
+
+  /* HERO */
+  .page-hero {
+    padding: 160px 5% 100px;
+    position: relative;
+    overflow: hidden;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .glow {
+    position: absolute;
+    border-radius: 50%;
+    pointer-events: none;
+  }
+
+  .glow-1 {
+    width: 700px; height: 700px;
+    background: radial-gradient(circle, rgba(123,92,255,0.12) 0%, transparent 70%);
+    top: -200px; right: -150px;
+  }
+
+  .glow-2 {
+    width: 500px; height: 500px;
+    background: radial-gradient(circle, rgba(200,240,74,0.08) 0%, transparent 70%);
+    bottom: -100px; left: 5%;
+  }
+
+  .page-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(200,240,74,0.08);
+    border: 1px solid rgba(200,240,74,0.2);
+    color: var(--accent);
+    font-size: 0.82rem;
+    font-weight: 600;
+    padding: 6px 14px;
+    border-radius: 100px;
+    margin-bottom: 32px;
+    animation: fadeUp 0.5s ease both;
+  }
+
+  .page-hero h1 {
+    font-family: 'Syne', sans-serif;
+    font-weight: 800;
+    font-size: clamp(2.8rem, 6vw, 5.5rem);
+    line-height: 1.0;
+    letter-spacing: -2px;
+    max-width: 800px;
+    animation: fadeUp 0.5s 0.1s ease both;
+  }
+
+  .page-hero h1 em { font-style: normal; color: var(--accent); }
+
+  .page-hero-sub {
+    margin-top: 24px;
+    font-size: 1.1rem;
+    color: var(--muted);
+    max-width: 540px;
+    font-weight: 300;
+    line-height: 1.75;
+    animation: fadeUp 0.5s 0.2s ease both;
+  }
+
+  /* SERVICES LIST */
+  .services-section {
+    padding: 100px 5%;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .services-list {
+    margin-top: 70px;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+
+  .service-item {
+    display: grid;
+    grid-template-columns: 80px 1fr 1fr;
+    gap: 40px;
+    padding: 48px 40px;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 0;
+    align-items: start;
+    transition: border-color 0.3s, background 0.3s;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .service-item:first-child { border-radius: 20px 20px 0 0; }
+  .service-item:last-child { border-radius: 0 0 20px 20px; }
+
+  .service-item::before {
+    content: '';
+    position: absolute;
+    left: 0; top: 0; bottom: 0;
+    width: 3px;
+    background: linear-gradient(180deg, var(--accent), var(--accent2));
+    transform: scaleY(0);
+    transition: transform 0.4s;
+    transform-origin: top;
+  }
+
+  .service-item:hover {
+    border-color: rgba(255,255,255,0.1);
+    background: #151520;
+  }
+
+  .service-item:hover::before { transform: scaleY(1); }
+
+  .service-num {
+    font-family: 'Syne', sans-serif;
+    font-weight: 800;
+    font-size: 1rem;
+    color: rgba(255,255,255,0.1);
+    padding-top: 8px;
+  }
+
+  .service-main {}
+
+  .service-icon-wrap {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 16px;
+  }
+
+  .service-icon {
+    width: 48px; height: 48px;
+    border-radius: 12px;
+    background: rgba(200,240,74,0.08);
+    border: 1px solid rgba(200,240,74,0.15);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.4rem;
+    flex-shrink: 0;
+  }
+
+  .service-main h3 {
+    font-family: 'Syne', sans-serif;
+    font-weight: 800;
+    font-size: 1.2rem;
+    letter-spacing: -0.3px;
+  }
+
+  .service-main p {
+    color: var(--muted);
+    font-size: 0.9rem;
+    line-height: 1.75;
+    margin-bottom: 20px;
+  }
+
+  .service-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .service-tag {
+    background: rgba(200,240,74,0.06);
+    border: 1px solid rgba(200,240,74,0.12);
+    color: var(--accent);
+    font-size: 0.75rem;
+    font-weight: 600;
+    padding: 4px 12px;
+    border-radius: 100px;
+  }
+
+  .service-details {
+    border-left: 1px solid var(--border);
+    padding-left: 40px;
+  }
+
+  .service-details-title {
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 16px;
+  }
+
+  .service-checklist {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .service-checklist li {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    font-size: 0.88rem;
+    color: var(--muted);
+    line-height: 1.5;
+  }
+
+  .service-checklist li::before {
+    content: '✓';
+    color: var(--accent);
+    font-weight: 700;
+    flex-shrink: 0;
+  }
+
+  /* PRICING */
+  .pricing-section {
+    padding: 100px 5%;
+    background: var(--bg2);
+    border-bottom: 1px solid var(--border);
+  }
+
+  .pricing-header {
+    text-align: center;
+    max-width: 600px;
+    margin: 0 auto 70px;
+  }
+
+  .section-tag {
+    font-size: 0.78rem;
+    font-weight: 700;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 20px;
+  }
+
+  .section-title {
+    font-family: 'Syne', sans-serif;
+    font-weight: 800;
+    font-size: clamp(2rem, 4vw, 3rem);
+    line-height: 1.1;
+    letter-spacing: -1px;
+    margin-bottom: 14px;
+  }
+
+  .section-sub {
+    color: var(--muted);
+    font-size: 1rem;
+    line-height: 1.7;
+  }
+
+  .pricing-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+    max-width: 1100px;
+    margin: 0 auto;
+  }
+
+  .pricing-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 24px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    transition: transform 0.3s, border-color 0.3s;
+  }
+
+  .pricing-card:hover {
+    transform: translateY(-6px);
+    border-color: rgba(255,255,255,0.1);
+  }
+
+  .pricing-card.featured {
+    border-color: rgba(200,240,74,0.3);
+    position: relative;
+  }
+
+  .pricing-card.featured::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, var(--accent), var(--accent2));
+  }
+
+  .pricing-card-head {
+    padding: 32px 32px 24px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .pricing-badge {
+    display: inline-block;
+    background: rgba(200,240,74,0.1);
+    border: 1px solid rgba(200,240,74,0.25);
+    color: var(--accent);
+    font-size: 0.72rem;
+    font-weight: 700;
+    padding: 3px 10px;
+    border-radius: 100px;
+    margin-bottom: 16px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+  }
+
+  .pricing-card-head h3 {
+    font-family: 'Syne', sans-serif;
+    font-weight: 800;
+    font-size: 1.2rem;
+    margin-bottom: 8px;
+  }
+
+  .pricing-card-head p {
+    color: var(--muted);
+    font-size: 0.85rem;
+    line-height: 1.6;
+  }
+
+  .pricing-amount {
+    padding: 24px 32px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .price-label {
+    font-size: 0.75rem;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 6px;
+  }
+
+  .price-value {
+    font-family: 'Syne', sans-serif;
+    font-weight: 800;
+    font-size: 2rem;
+    line-height: 1;
+    margin-bottom: 4px;
+  }
+
+  .price-value.accent { color: var(--accent); }
+  .price-value.purple { color: #a89fff; }
+  .price-value.red { color: #ff8a80; }
+
+  .price-note {
+    font-size: 0.8rem;
+    color: var(--muted);
+  }
+
+  .pricing-card-body {
+    padding: 28px 32px;
+    flex: 1;
+  }
+
+  .pricing-list {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .pricing-list li {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    font-size: 0.88rem;
+    color: var(--muted);
+    line-height: 1.5;
+  }
+
+  .pricing-list li::before {
+    content: '✓';
+    color: var(--accent);
+    font-weight: 700;
+    flex-shrink: 0;
+  }
+
+  /* TOTAL COST BOX */
+  .total-cost {
+    max-width: 700px;
+    margin: 40px auto 0;
+    background: rgba(200,240,74,0.05);
+    border: 1px solid rgba(200,240,74,0.15);
+    border-radius: 20px;
+    padding: 32px 40px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 24px;
+    flex-wrap: wrap;
+  }
+
+  .total-cost-left h4 {
+    font-family: 'Syne', sans-serif;
+    font-weight: 700;
+    font-size: 1rem;
+    margin-bottom: 6px;
+  }
+
+  .total-cost-left p {
+    color: var(--muted);
+    font-size: 0.85rem;
+    line-height: 1.6;
+  }
+
+  .total-cost-right {
+    text-align: right;
+    flex-shrink: 0;
+  }
+
+  .total-cost-num {
+    font-family: 'Syne', sans-serif;
+    font-weight: 800;
+    font-size: 1.8rem;
+    color: var(--accent);
+    line-height: 1;
+  }
+
+  .total-cost-sub {
+    font-size: 0.78rem;
+    color: var(--muted);
+    margin-top: 4px;
+  }
+
+  /* PROCESS */
+  .process-section {
+    padding: 100px 5%;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .process-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 2px;
+    margin-top: 60px;
+  }
+
+  .process-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    padding: 36px 28px;
+    position: relative;
+    transition: border-color 0.3s;
+  }
+
+  .process-card:first-child { border-radius: 20px 0 0 20px; }
+  .process-card:last-child { border-radius: 0 20px 20px 0; }
+  .process-card:hover { border-color: rgba(200,240,74,0.2); }
+
+  .process-step-num {
+    font-family: 'Syne', sans-serif;
+    font-weight: 800;
+    font-size: 3rem;
+    color: rgba(200,240,74,0.08);
+    line-height: 1;
+    margin-bottom: 20px;
+  }
+
+  .process-card h4 {
+    font-family: 'Syne', sans-serif;
+    font-weight: 700;
+    font-size: 0.95rem;
+    margin-bottom: 10px;
+  }
+
+  .process-card p {
+    color: var(--muted);
+    font-size: 0.85rem;
+    line-height: 1.65;
+  }
+
+  .process-arrow {
+    position: absolute;
+    top: 36px; right: -14px;
+    width: 28px; height: 28px;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.75rem;
+    color: var(--accent);
+    z-index: 2;
+  }
+
+  .process-card:last-child .process-arrow { display: none; }
+
+  /* CTA */
+  .cta-section {
+    padding: 120px 5%;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .cta-section::before {
+    content: '';
+    position: absolute;
+    width: 700px; height: 700px;
+    background: radial-gradient(circle, rgba(200,240,74,0.07) 0%, transparent 70%);
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    pointer-events: none; /* FIX #2: this 700×700px glow was blocking clicks on the CTA buttons */
+  }
+
+  .cta-section h2 {
+    font-family: 'Syne', sans-serif;
+    font-weight: 800;
+    font-size: clamp(2.2rem, 5vw, 4rem);
+    line-height: 1.1;
+    letter-spacing: -1.5px;
+    max-width: 700px;
+    margin: 0 auto 20px;
+  }
+
+  .cta-section h2 span { color: var(--accent); }
+
+  .cta-section p {
+    color: var(--muted);
+    font-size: 1rem;
+    max-width: 460px;
+    margin: 0 auto 44px;
+    line-height: 1.7;
+  }
+
+  .cta-actions {
+    display: flex;
+    gap: 14px;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+
+  .btn-primary {
+    background: var(--accent);
+    color: #000;
+    font-weight: 700;
+    font-size: 0.95rem;
+    padding: 14px 32px;
+    border-radius: 100px;
+    text-decoration: none;
+    box-shadow: 0 0 40px rgba(200,240,74,0.25);
+    transition: transform 0.2s, box-shadow 0.2s;
+  }
+
+  .btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 0 60px rgba(200,240,74,0.4);
+  }
+
+  .btn-outline {
+    background: transparent;
+    color: var(--text);
+    font-weight: 500;
+    font-size: 0.95rem;
+    padding: 14px 32px;
+    border-radius: 100px;
+    text-decoration: none;
+    border: 1px solid var(--border);
+    transition: border-color 0.2s, background 0.2s;
+  }
+
+  .btn-outline:hover {
+    border-color: rgba(255,255,255,0.2);
+    background: rgba(255,255,255,0.04);
+  }
+
+  /* FOOTER */
+  footer {
+    border-top: 1px solid var(--border);
+    padding: 48px 5%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 20px;
+  }
+
+  .footer-logo {
+    font-family: 'Syne', sans-serif;
+    font-weight: 800;
+    font-size: 1.1rem;
+    color: var(--text);
+    text-decoration: none;
+  }
+
+  .footer-logo span { color: var(--accent); }
+
+  .footer-links {
+    display: flex;
+    gap: 28px;
+    list-style: none;
+  }
+
+  .footer-links a {
+    color: var(--muted);
+    font-size: 0.85rem;
+    text-decoration: none;
+    transition: color 0.2s;
+  }
+
+  .footer-links a:hover { color: var(--text); }
+  .footer-copy { color: var(--muted); font-size: 0.8rem; }
+
+  /* ANIMATIONS */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(24px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .reveal {
+    opacity: 0;
+    transform: translateY(30px);
+    transition: opacity 0.7s ease, transform 0.7s ease;
+    pointer-events: none; /* FIX #3a: invisible elements must not intercept clicks */
+    will-change: transform, opacity; /* FIX #3b: promote layer upfront so hit-testing matches visual position during transition */
+  }
+
+  .reveal.visible {
+    opacity: 1;
+    transform: none;
+    pointer-events: auto; /* restore interactivity once visible */
+    will-change: auto; /* release compositing layer once animation is done */
+  }
+
+  /* RESPONSIVE */
+  @media (max-width: 900px) {
+    .nav-links { display: none; }
+    .service-item { grid-template-columns: 1fr; gap: 24px; }
+    .service-details { border-left: none; padding-left: 0; border-top: 1px solid var(--border); padding-top: 24px; }
+    .pricing-grid { grid-template-columns: 1fr; }
+    .process-grid { grid-template-columns: 1fr 1fr; }
+    .process-card:first-child { border-radius: 20px 0 0 0; }
+    .process-card:last-child { border-radius: 0 0 20px 0; }
+    .process-arrow { display: none; }
+    .total-cost { flex-direction: column; text-align: center; }
+    .total-cost-right { text-align: center; }
+  }
+
+  .currency-toggle {
+    display: flex;
+    background: rgba(255,255,255,0.05);
+    border: 1px solid var(--border);
+    border-radius: 100px;
+    padding: 3px;
+    gap: 2px;
+  }
+
+  .cur-btn {
+    background: transparent;
+    border: none;
+    color: var(--muted);
+    font-family: 'Syne', sans-serif;
+    font-weight: 700;
+    font-size: 0.75rem;
+    padding: 5px 14px;
+    border-radius: 100px;
+    cursor: pointer;
+    transition: background 0.2s, color 0.2s;
+  }
+
+  .cur-btn.active { background: var(--accent); color: #000; }
+
+  .cur-val { transition: opacity 0.2s; }
+  .cur-val.switching { opacity: 0; }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a class="nav-logo" href="index.html">Luthen<span>Corps</span></a>
+  <ul class="nav-links">
+    <li><a href="about.html">About</a></li>
+    <li><a href="services.html" class="active">Services</a></li>
+    <li><a href="how-it-works.html">How It Works</a></li>
+    <li><a href="contact.html">Contact</a></li>
+  </ul>
+  <a class="nav-cta" href="contact.html">Get Started →</a>
+</nav>
+
+<!-- HERO -->
+<section class="page-hero">
+  <div class="glow glow-1"></div>
+  <div class="glow glow-2"></div>
+  <div class="page-tag">What We Offer</div>
+  <h1>Everything You Need to <em>Win</em> at Affiliate Marketing</h1>
+  <p class="page-hero-sub">From zero to a fully running affiliate program — we handle every piece of the puzzle so you don't have to.</p>
+</section>
+
+<!-- SERVICES LIST -->
+<section class="services-section">
+  <div class="services-list">
+
+    <!-- 01 -->
+    <div class="service-item reveal">
+      <div class="service-num">01</div>
+      <div class="service-main">
+        <div class="service-icon-wrap">
+          <div class="service-icon">⚙️</div>
+          <h3>Affiliate Program Setup</h3>
+        </div>
+        <p>We build your entire affiliate program from scratch on Impact.com — the world's leading affiliate management platform. Every setting, every tracking link, every commission rule — configured correctly from day one.</p>
+        <div class="service-tags">
+          <span class="service-tag">Impact.com</span>
+          <span class="service-tag">Tracking Setup</span>
+          <span class="service-tag">Commission Rules</span>
+          <span class="service-tag">Creatives</span>
+        </div>
+      </div>
+      <div class="service-details">
+        <div class="service-details-title">What's included</div>
+        <ul class="service-checklist">
+          <li>Full Impact.com account & program configuration</li>
+          <li>Unique tracking links for every affiliate</li>
+          <li>Commission structure design & setup</li>
+          <li>Affiliate landing page & creative assets</li>
+          <li>Program terms & compliance documents</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- 02 -->
+    <div class="service-item reveal">
+      <div class="service-num">02</div>
+      <div class="service-main">
+        <div class="service-icon-wrap">
+          <div class="service-icon">🎯</div>
+          <h3>Affiliate Recruitment</h3>
+        </div>
+        <p>Finding the right affiliates is the hardest part — and the most important. We identify, reach out to, and onboard affiliates that genuinely match your brand's niche, audience, and values. Quality over quantity, always.</p>
+        <div class="service-tags">
+          <span class="service-tag">Niche Targeting</span>
+          <span class="service-tag">Outreach</span>
+          <span class="service-tag">Vetting</span>
+          <span class="service-tag">Onboarding</span>
+        </div>
+      </div>
+      <div class="service-details">
+        <div class="service-details-title">What's included</div>
+        <ul class="service-checklist">
+          <li>Affiliate research & niche targeting</li>
+          <li>Outreach to bloggers, creators & deal sites</li>
+          <li>Audience quality & brand alignment vetting</li>
+          <li>Onboarding & welcome communication</li>
+          <li>Providing promotional materials to affiliates</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- 03 -->
+    <div class="service-item reveal">
+      <div class="service-num">03</div>
+      <div class="service-main">
+        <div class="service-icon-wrap">
+          <div class="service-icon">🤝</div>
+          <h3>Program Management</h3>
+        </div>
+        <p>Running an affiliate program day-to-day is a full-time job. Approvals, communications, disputes, compliance checks — we handle all of it so you can stay focused on your product and customers.</p>
+        <div class="service-tags">
+          <span class="service-tag">Daily Operations</span>
+          <span class="service-tag">Approvals</span>
+          <span class="service-tag">Communications</span>
+          <span class="service-tag">Compliance</span>
+        </div>
+      </div>
+      <div class="service-details">
+        <div class="service-details-title">What's included</div>
+        <ul class="service-checklist">
+          <li>Affiliate approval & rejection management</li>
+          <li>Ongoing affiliate communication & support</li>
+          <li>Commission dispute resolution</li>
+          <li>Brand guidelines & compliance monitoring</li>
+          <li>Keeping affiliates active & motivated</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- 04 -->
+    <div class="service-item reveal">
+      <div class="service-num">04</div>
+      <div class="service-main">
+        <div class="service-icon-wrap">
+          <div class="service-icon">📊</div>
+          <h3>Performance Reporting</h3>
+        </div>
+        <p>You'll never be in the dark about how your program is performing. We track every click, conversion, and rupee — and translate it into clear, actionable reports that show you exactly what's working.</p>
+        <div class="service-tags">
+          <span class="service-tag">Click Tracking</span>
+          <span class="service-tag">Conversion Reports</span>
+          <span class="service-tag">ROAS Analysis</span>
+          <span class="service-tag">Top Affiliates</span>
+        </div>
+      </div>
+      <div class="service-details">
+        <div class="service-details-title">What's included</div>
+        <ul class="service-checklist">
+          <li>Regular performance update reports</li>
+          <li>Top affiliate ranking & analysis</li>
+          <li>Click-to-conversion rate tracking</li>
+          <li>Revenue & ROAS breakdown</li>
+          <li>Actionable insights & next steps</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- 05 -->
+    <div class="service-item reveal">
+      <div class="service-num">05</div>
+      <div class="service-main">
+        <div class="service-icon-wrap">
+          <div class="service-icon">🛡️</div>
+          <h3>Fraud Prevention</h3>
+        </div>
+        <p>Not every affiliate plays fair. We actively monitor your program for suspicious traffic patterns, fake conversions, and brand-damaging partners — and remove them before they cost you money or reputation.</p>
+        <div class="service-tags">
+          <span class="service-tag">Traffic Monitoring</span>
+          <span class="service-tag">Fraud Detection</span>
+          <span class="service-tag">Brand Safety</span>
+          <span class="service-tag">Removal</span>
+        </div>
+      </div>
+      <div class="service-details">
+        <div class="service-details-title">What's included</div>
+        <ul class="service-checklist">
+          <li>Suspicious traffic pattern monitoring</li>
+          <li>Fake conversion detection & flagging</li>
+          <li>Immediate removal of bad affiliates</li>
+          <li>Brand placement & context checks</li>
+          <li>Ongoing program health monitoring</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- 06 -->
+    <div class="service-item reveal">
+      <div class="service-num">06</div>
+      <div class="service-main">
+        <div class="service-icon-wrap">
+          <div class="service-icon">🚀</div>
+          <h3>Growth & Scaling</h3>
+        </div>
+        <p>Once the foundation is solid, we shift into growth mode. We expand your affiliate base, test new categories, run performance incentives, and continuously optimize to push your program to its full revenue potential.</p>
+        <div class="service-tags">
+          <span class="service-tag">Expansion</span>
+          <span class="service-tag">Incentives</span>
+          <span class="service-tag">Optimization</span>
+          <span class="service-tag">Scaling</span>
+        </div>
+      </div>
+      <div class="service-details">
+        <div class="service-details-title">What's included</div>
+        <ul class="service-checklist">
+          <li>New affiliate category expansion</li>
+          <li>Performance bonus & incentive programs</li>
+          <li>Commission structure optimization</li>
+          <li>Underperformer replacement strategy</li>
+          <li>Monthly growth planning & review</li>
+        </ul>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- PRICING -->
+<section class="pricing-section">
+  <div class="pricing-header reveal">
+    <div class="section-tag">Transparent Pricing</div>
+    <h2 class="section-title">Simple. Fair. Performance-Based.</h2>
+    <p class="section-sub">No retainers. No hidden fees. You pay for results — and only when results happen.</p>
+  </div>
+
+  <div class="pricing-grid reveal">
+
+    <!-- Impact.com -->
+    <div class="pricing-card">
+      <div class="pricing-card-head">
+        <div class="pricing-badge">Platform Fee</div>
+        <h3>Impact.com</h3>
+        <p>The industry-leading affiliate tracking platform. Required to run your program — paid directly to Impact.com.</p>
+      </div>
+      <div class="pricing-amount">
+        <div class="price-label">Fixed Monthly Cost</div>
+        <div class="price-value red">$30<span style="font-size:1rem; font-weight:500; color:var(--muted);">/mo</span></div>
+        <div class="price-note">~₹2,500/month · paid to Impact.com</div>
+      </div>
+      <div class="pricing-card-body">
+        <ul class="pricing-list">
+          <li>Full affiliate tracking & attribution</li>
+          <li>Real-time dashboard & reporting</li>
+          <li>Automated commission payouts</li>
+          <li>Fraud detection tools</li>
+          <li>Unlimited affiliate links</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- LuthenCorps Fee -->
+    <div class="pricing-card featured">
+      <div class="pricing-card-head">
+        <div class="pricing-badge">Our Fee</div>
+        <h3>LuthenCorps</h3>
+        <p>Our management fee covers everything — setup, recruitment, management, reporting, and growth.</p>
+      </div>
+      <div class="pricing-amount">
+        <div class="price-label">Performance Fee</div>
+        <div class="price-value accent">15–20%<span style="font-size:1rem; font-weight:500; color:var(--muted);"> of sales</span></div>
+        <div class="price-note">Negotiable · only charged when sales happen</div>
+      </div>
+      <div class="pricing-card-body">
+        <ul class="pricing-list">
+          <li>Full program setup on Impact.com</li>
+          <li>Affiliate recruitment & vetting</li>
+          <li>Day-to-day program management</li>
+          <li>Performance reports & updates</li>
+          <li>Fraud prevention & brand safety</li>
+          <li>Growth strategy & scaling</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Affiliate Commission -->
+    <div class="pricing-card">
+      <div class="pricing-card-head">
+        <div class="pricing-badge">Affiliate Commission</div>
+        <h3>To Affiliates</h3>
+        <p>What affiliates earn for every confirmed sale they generate for your brand through their content.</p>
+      </div>
+      <div class="pricing-amount">
+        <div class="price-label">Per Sale Generated</div>
+        <div class="price-value purple">Up to 20%<span style="font-size:1rem; font-weight:500; color:var(--muted);"> per sale</span></div>
+        <div class="price-note">Only paid on confirmed conversions</div>
+      </div>
+      <div class="pricing-card-body">
+        <ul class="pricing-list">
+          <li>Paid only on confirmed sales</li>
+          <li>Tracked 100% via Impact.com</li>
+          <li>Automated payout system</li>
+          <li>Rate varies by niche & volume</li>
+          <li>Motivates affiliates to perform</li>
+        </ul>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- TOTAL COST SUMMARY -->
+  <div class="total-cost reveal">
+    <div class="total-cost-left">
+      <h4>Your Total Cost Breakdown (Example)</h4>
+      <p>On <span class="cur-val" data-inr="₹2,25,000" data-usd="$2,711">₹2,25,000</span> gross revenue generated by affiliates in a month — here's what comes out:</p>
+    </div>
+    <div class="total-cost-right">
+      <div style="display:flex; align-items:center; gap:12px; justify-content:flex-end; margin-bottom:10px;">
+        <div class="currency-toggle">
+          <button class="cur-btn active" onclick="setCurrency('inr')" id="inrBtn">₹ INR</button>
+          <button class="cur-btn" onclick="setCurrency('usd')" id="usdBtn">$ USD</button>
+        </div>
+      </div>
+      <div class="total-cost-num cur-val" data-inr="₹1,43,750" data-usd="$1,731">₹1,43,750</div>
+      <div class="total-cost-sub">Brand keeps · after all fees</div>
+    </div>
+  </div>
+</section>
+
+<!-- HOW WE WORK -->
+<section class="process-section">
+  <div class="reveal" style="text-align:center; max-width:600px; margin:0 auto 20px;">
+    <div class="section-tag">Our Process</div>
+    <h2 class="section-title" style="margin:0 auto;">From Sign-Up to First Sale in 7 Days</h2>
+  </div>
+
+  <div class="process-grid reveal">
+    <div class="process-card">
+      <div class="process-step-num">01</div>
+      <h4>Discovery Call</h4>
+      <p>We learn about your brand, goals, and margins. Together we decide on the right commission structure and strategy.</p>
+      <div class="process-arrow">→</div>
+    </div>
+    <div class="process-card">
+      <div class="process-step-num">02</div>
+      <h4>Program Setup</h4>
+      <p>We configure your Impact.com program, set up tracking, design commission rules, and prepare affiliate materials.</p>
+      <div class="process-arrow">→</div>
+    </div>
+    <div class="process-card">
+      <div class="process-step-num">03</div>
+      <h4>Affiliate Recruitment</h4>
+      <p>We reach out to and onboard affiliates that match your niche. Vetting happens before any affiliate is approved.</p>
+      <div class="process-arrow">→</div>
+    </div>
+    <div class="process-card">
+      <div class="process-step-num">04</div>
+      <h4>Launch & Grow</h4>
+      <p>Your program goes live. We manage everything ongoing — reporting, optimizing, and scaling your affiliate revenue.</p>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="cta-section">
+  <div class="section-tag reveal" style="display:inline-block; margin-bottom:24px;">Ready?</div>
+  <h2 class="reveal">Start Your Affiliate Program <span>Today.</span></h2>
+  <p class="reveal">No upfront costs. No risk. Just performance-based growth — and we don't get paid unless you do.</p>
+  <div class="cta-actions reveal">
+    <a class="btn-primary" href="contact.html#contact-form">Get Started →</a>
+    <a class="btn-outline" href="how-it-works.html#process">See How It Works</a>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <a class="footer-logo" href="index.html">Luthen<span>Corps</span></a>
+  <div style="font-size:0.85rem; color:var(--muted);">📩 <a href="mailto:luthenaffiliates@luthencorps.space" style="color:var(--accent); text-decoration:none;">luthenaffiliates@luthencorps.space</a></div>
+  <ul class="footer-links">
+    <li><a href="about.html">About</a></li>
+    <li><a href="services.html" class="active">Services</a></li>
+    <li><a href="how-it-works.html">How It Works</a></li>
+    <li><a href="contact.html">Contact</a></li>
+  </ul>
+  <div class="footer-copy">© 2026 LuthenCorps. All rights reserved.</div>
+</footer>
+
+<script>
+  const reveals = document.querySelectorAll('.reveal');
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach((entry, i) => {
+      if (entry.isIntersecting) {
+        setTimeout(() => entry.target.classList.add('visible'), i * 80);
+        observer.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.08 });
+  reveals.forEach(el => observer.observe(el));
+
+  const nav = document.querySelector('nav');
+  window.addEventListener('scroll', () => {
+    nav.style.padding = window.scrollY > 50 ? '12px 5%' : '20px 5%';
+  });
+
+  let currentCurrency = 'inr';
+
+  function setCurrency(cur) {
+    if (cur === currentCurrency) return;
+    currentCurrency = cur;
+    document.getElementById('inrBtn').classList.toggle('active', cur === 'inr');
+    document.getElementById('usdBtn').classList.toggle('active', cur === 'usd');
+    const vals = document.querySelectorAll('.cur-val');
+    vals.forEach(el => el.classList.add('switching'));
+    setTimeout(() => {
+      vals.forEach(el => {
+        el.textContent = el.dataset[cur];
+        el.classList.remove('switching');
+      });
+    }, 200);
+  }
+
+</script>
+</body>
+</html>

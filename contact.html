@@ -1,0 +1,837 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Contact — LuthenCorps</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #060608;
+    --bg2: #0d0d12;
+    --border: rgba(255,255,255,0.07);
+    --accent: #c8f04a;
+    --accent2: #7b5cff;
+    --text: #f0f0f5;
+    --muted: #6b6b80;
+    --card: #13131c;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 16px;
+    line-height: 1.6;
+    overflow-x: hidden;
+  }
+
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.035'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 1000;
+    opacity: 0.4;
+  }
+
+  /* NAV */
+  nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 900;
+    padding: 20px 5%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 1px solid var(--border);
+    backdrop-filter: blur(20px);
+    background: rgba(6,6,8,0.8);
+    transition: padding 0.3s;
+  }
+
+  .nav-logo {
+    font-family: 'Syne', sans-serif;
+    font-weight: 800;
+    font-size: 1.3rem;
+    color: var(--text);
+    text-decoration: none;
+  }
+
+  .nav-logo span { color: var(--accent); }
+
+  .nav-links {
+    display: flex;
+    gap: 36px;
+    list-style: none;
+  }
+
+  .nav-links a {
+    color: var(--muted);
+    text-decoration: none;
+    font-size: 0.9rem;
+    font-weight: 500;
+    transition: color 0.2s;
+  }
+
+  .nav-links a:hover, .nav-links a.active { color: var(--text); }
+
+  .nav-cta {
+    background: var(--accent);
+    color: #000;
+    font-weight: 700;
+    font-size: 0.88rem;
+    padding: 10px 22px;
+    border-radius: 100px;
+    text-decoration: none;
+    transition: opacity 0.2s, transform 0.2s;
+  }
+
+  .nav-cta:hover { opacity: 0.85; transform: translateY(-1px); }
+
+  /* HERO */
+  .page-hero {
+    padding: 160px 5% 80px;
+    position: relative;
+    overflow: hidden;
+    border-bottom: 1px solid var(--border);
+    text-align: center;
+  }
+
+  .glow {
+    position: absolute;
+    border-radius: 50%;
+    pointer-events: none;
+  }
+
+  .glow-1 {
+    width: 600px; height: 600px;
+    background: radial-gradient(circle, rgba(200,240,74,0.1) 0%, transparent 70%);
+    top: -150px; left: 50%;
+    transform: translateX(-50%);
+  }
+
+  .glow-2 {
+    width: 400px; height: 400px;
+    background: radial-gradient(circle, rgba(123,92,255,0.1) 0%, transparent 70%);
+    bottom: -100px; right: 5%;
+  }
+
+  .page-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(200,240,74,0.08);
+    border: 1px solid rgba(200,240,74,0.2);
+    color: var(--accent);
+    font-size: 0.82rem;
+    font-weight: 600;
+    padding: 6px 14px;
+    border-radius: 100px;
+    margin-bottom: 28px;
+    animation: fadeUp 0.5s ease both;
+  }
+
+  .page-tag::before {
+    content: '';
+    width: 6px; height: 6px;
+    background: var(--accent);
+    border-radius: 50%;
+    animation: pulse 2s infinite;
+  }
+
+  @keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.3; }
+  }
+
+  .page-hero h1 {
+    font-family: 'Syne', sans-serif;
+    font-weight: 800;
+    font-size: clamp(2.8rem, 6vw, 5rem);
+    line-height: 1.05;
+    letter-spacing: -2px;
+    max-width: 700px;
+    margin: 0 auto;
+    animation: fadeUp 0.5s 0.1s ease both;
+  }
+
+  .page-hero h1 em { font-style: normal; color: var(--accent); }
+
+  .page-hero-sub {
+    margin-top: 20px;
+    font-size: 1.05rem;
+    color: var(--muted);
+    max-width: 480px;
+    margin: 20px auto 0;
+    font-weight: 300;
+    line-height: 1.75;
+    animation: fadeUp 0.5s 0.2s ease both;
+  }
+
+  /* MAIN CONTACT SECTION */
+  .contact-section {
+    padding: 80px 5%;
+    display: grid;
+    grid-template-columns: 1fr 1.2fr;
+    gap: 60px;
+    align-items: start;
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+
+  /* LEFT — CONTACT CARDS */
+  .contact-cards {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    position: sticky;
+    top: 100px;
+  }
+
+  .contact-label {
+    font-size: 0.78rem;
+    font-weight: 700;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 8px;
+  }
+
+  .contact-heading {
+    font-family: 'Syne', sans-serif;
+    font-weight: 800;
+    font-size: 1.8rem;
+    line-height: 1.2;
+    letter-spacing: -0.5px;
+    margin-bottom: 12px;
+  }
+
+  .contact-desc {
+    color: var(--muted);
+    font-size: 0.9rem;
+    line-height: 1.7;
+    margin-bottom: 32px;
+  }
+
+  .contact-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 24px 26px;
+    display: flex;
+    align-items: center;
+    gap: 18px;
+    text-decoration: none;
+    transition: border-color 0.3s, transform 0.3s;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .contact-card::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    opacity: 0;
+    transition: opacity 0.3s;
+  }
+
+  .contact-card.whatsapp::before {
+    background: linear-gradient(135deg, rgba(37,211,102,0.06), transparent);
+  }
+
+  .contact-card.email::before {
+    background: linear-gradient(135deg, rgba(200,240,74,0.06), transparent);
+  }
+
+  .contact-card.instagram::before {
+    background: linear-gradient(135deg, rgba(225,48,108,0.06), transparent);
+  }
+
+  .contact-card:hover {
+    transform: translateX(6px);
+    border-color: rgba(255,255,255,0.12);
+  }
+
+  .contact-card:hover::before { opacity: 1; }
+
+  .contact-card-icon {
+    width: 48px; height: 48px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.4rem;
+    flex-shrink: 0;
+  }
+
+  .whatsapp .contact-card-icon { background: rgba(37,211,102,0.1); }
+  .email .contact-card-icon { background: rgba(200,240,74,0.1); }
+  .instagram .contact-card-icon { background: rgba(225,48,108,0.1); }
+
+  .contact-card-text { flex: 1; }
+
+  .contact-card-title {
+    font-family: 'Syne', sans-serif;
+    font-weight: 700;
+    font-size: 0.95rem;
+    margin-bottom: 3px;
+  }
+
+  .contact-card-value {
+    color: var(--muted);
+    font-size: 0.85rem;
+  }
+
+  .contact-card-arrow {
+    color: var(--muted);
+    font-size: 1rem;
+    transition: transform 0.3s, color 0.3s;
+  }
+
+  .contact-card:hover .contact-card-arrow {
+    transform: translateX(4px);
+    color: var(--accent);
+  }
+
+  /* RESPONSE TIME */
+  .response-box {
+    margin-top: 8px;
+    background: rgba(200,240,74,0.05);
+    border: 1px solid rgba(200,240,74,0.12);
+    border-radius: 12px;
+    padding: 16px 20px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-size: 0.85rem;
+    color: var(--muted);
+  }
+
+  .response-dot {
+    width: 8px; height: 8px;
+    background: var(--accent);
+    border-radius: 50%;
+    flex-shrink: 0;
+    animation: pulse 2s infinite;
+  }
+
+  /* RIGHT — FORM */
+  .contact-form-wrap {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 24px;
+    overflow: hidden;
+  }
+
+  .form-head {
+    padding: 28px 36px;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .form-head-title {
+    font-family: 'Syne', sans-serif;
+    font-weight: 700;
+    font-size: 1rem;
+  }
+
+  .form-head-badge {
+    background: rgba(200,240,74,0.1);
+    border: 1px solid rgba(200,240,74,0.2);
+    color: var(--accent);
+    font-size: 0.75rem;
+    font-weight: 700;
+    padding: 4px 12px;
+    border-radius: 100px;
+  }
+
+  .form-body {
+    padding: 36px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  .form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+  }
+
+  .form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .form-group label {
+    font-size: 0.82rem;
+    font-weight: 600;
+    color: var(--muted);
+    letter-spacing: 0.5px;
+  }
+
+  .form-group input,
+  .form-group select,
+  .form-group textarea {
+    background: rgba(255,255,255,0.03);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 12px 16px;
+    color: var(--text);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.9rem;
+    outline: none;
+    transition: border-color 0.2s, background 0.2s;
+    width: 100%;
+  }
+
+  .form-group select {
+    cursor: pointer;
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%236b6b80' d='M6 8L1 3h10z'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 14px center;
+    padding-right: 36px;
+  }
+
+  .form-group select option { background: #13131c; }
+
+  .form-group input:focus,
+  .form-group select:focus,
+  .form-group textarea:focus {
+    border-color: rgba(200,240,74,0.4);
+    background: rgba(200,240,74,0.03);
+  }
+
+  .form-group input::placeholder,
+  .form-group textarea::placeholder { color: var(--muted); opacity: 0.6; }
+
+  .form-group textarea {
+    resize: none;
+    height: 120px;
+    line-height: 1.6;
+  }
+
+  .form-submit {
+    background: var(--accent);
+    color: #000;
+    font-family: 'Syne', sans-serif;
+    font-weight: 700;
+    font-size: 1rem;
+    padding: 16px;
+    border-radius: 12px;
+    border: none;
+    cursor: pointer;
+    width: 100%;
+    transition: transform 0.2s, box-shadow 0.2s, opacity 0.2s;
+    box-shadow: 0 0 30px rgba(200,240,74,0.2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+  }
+
+  .form-submit:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 0 50px rgba(200,240,74,0.35);
+  }
+
+  .form-submit:active { transform: translateY(0); opacity: 0.9; }
+
+  .form-note {
+    text-align: center;
+    font-size: 0.78rem;
+    color: var(--muted);
+    margin-top: 4px;
+  }
+
+  /* SUCCESS STATE */
+  .success-msg {
+    display: none;
+    text-align: center;
+    padding: 60px 36px;
+  }
+
+  .success-icon {
+    font-size: 3rem;
+    margin-bottom: 20px;
+  }
+
+  .success-msg h3 {
+    font-family: 'Syne', sans-serif;
+    font-weight: 800;
+    font-size: 1.4rem;
+    margin-bottom: 10px;
+  }
+
+  .success-msg p { color: var(--muted); font-size: 0.9rem; }
+
+  /* FAQ */
+  .faq-section {
+    padding: 80px 5%;
+    border-top: 1px solid var(--border);
+    max-width: 800px;
+    margin: 0 auto;
+  }
+
+  .faq-section .section-tag {
+    font-size: 0.78rem;
+    font-weight: 700;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 16px;
+  }
+
+  .faq-section h2 {
+    font-family: 'Syne', sans-serif;
+    font-weight: 800;
+    font-size: 2rem;
+    letter-spacing: -0.5px;
+    margin-bottom: 40px;
+  }
+
+  .faq-item {
+    border-bottom: 1px solid var(--border);
+    padding: 24px 0;
+    cursor: pointer;
+  }
+
+  .faq-item:first-of-type { border-top: 1px solid var(--border); }
+
+  .faq-q {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 16px;
+    font-family: 'Syne', sans-serif;
+    font-weight: 700;
+    font-size: 0.95rem;
+  }
+
+  .faq-icon {
+    font-size: 1.2rem;
+    color: var(--accent);
+    transition: transform 0.3s;
+    flex-shrink: 0;
+  }
+
+  .faq-item.open .faq-icon { transform: rotate(45deg); }
+
+  .faq-a {
+    color: var(--muted);
+    font-size: 0.9rem;
+    line-height: 1.75;
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.4s ease, padding 0.3s;
+  }
+
+  .faq-item.open .faq-a {
+    max-height: 200px;
+    padding-top: 14px;
+  }
+
+  /* FOOTER */
+  footer {
+    border-top: 1px solid var(--border);
+    padding: 48px 5%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 20px;
+  }
+
+  .footer-logo {
+    font-family: 'Syne', sans-serif;
+    font-weight: 800;
+    font-size: 1.1rem;
+    color: var(--text);
+    text-decoration: none;
+  }
+
+  .footer-logo span { color: var(--accent); }
+
+  .footer-links {
+    display: flex;
+    gap: 28px;
+    list-style: none;
+  }
+
+  .footer-links a {
+    color: var(--muted);
+    font-size: 0.85rem;
+    text-decoration: none;
+    transition: color 0.2s;
+  }
+
+  .footer-links a:hover { color: var(--text); }
+
+  .footer-copy { color: var(--muted); font-size: 0.8rem; }
+
+  /* ANIMATIONS */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(24px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .reveal {
+    opacity: 0;
+    transform: translateY(30px);
+    transition: opacity 0.7s ease, transform 0.7s ease;
+  }
+
+  .reveal.visible { opacity: 1; transform: none; }
+
+  /* RESPONSIVE */
+  @media (max-width: 900px) {
+    .nav-links { display: none; }
+    .contact-section { grid-template-columns: 1fr; gap: 40px; }
+    .contact-cards { position: static; }
+    .form-row { grid-template-columns: 1fr; }
+    .form-body { padding: 24px; }
+    .form-head { padding: 20px 24px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a class="nav-logo" href="index.html">Luthen<span>Corps</span></a>
+  <ul class="nav-links">
+    <li><a href="about.html">About</a></li>
+    <li><a href="services.html">Services</a></li>
+    <li><a href="how-it-works.html">How It Works</a></li>
+    <li><a href="contact.html" class="active">Contact</a></li>
+  </ul>
+  <a class="nav-cta" href="contact.html">Get Started →</a>
+</nav>
+
+<!-- HERO -->
+<section class="page-hero">
+  <div class="glow glow-1"></div>
+  <div class="glow glow-2"></div>
+  <div class="page-tag">Get In Touch</div>
+  <h1>Let's Build Something <em>Real.</em></h1>
+  <p class="page-hero-sub">Whether you're a brand ready to grow through affiliates, or a creator looking for quality brands — we're just one message away.</p>
+</section>
+
+<!-- CONTACT -->
+<div class="contact-section">
+
+  <!-- LEFT -->
+  <div class="contact-cards reveal">
+    <div class="contact-label">Reach Us Directly</div>
+    <h2 class="contact-heading">We're real people.<br>Let's talk.</h2>
+    <p class="contact-desc">No bots, no automated replies. When you reach out, Yatharth personally reads and responds to every message.</p>
+
+    <!-- WHATSAPP -->
+    <a class="contact-card whatsapp" href="https://wa.me/918826290150" target="_blank">
+      <div class="contact-card-icon">💬</div>
+      <div class="contact-card-text">
+        <div class="contact-card-title">Book a Call via WhatsApp</div>
+        <div class="contact-card-value">+91 88262 90150</div>
+      </div>
+      <div class="contact-card-arrow">→</div>
+    </a>
+
+    <!-- EMAIL -->
+    <a class="contact-card email" href="mailto:luthenaffiliates@luthencorps.space">
+      <div class="contact-card-icon">📩</div>
+      <div class="contact-card-text">
+        <div class="contact-card-title">Send Us an Email</div>
+        <div class="contact-card-value">luthenaffiliates@luthencorps.space</div>
+      </div>
+      <div class="contact-card-arrow">→</div>
+    </a>
+
+    <!-- INSTAGRAM -->
+    <a class="contact-card instagram" href="https://instagram.com/luthencorps" target="_blank">
+      <div class="contact-card-icon">📸</div>
+      <div class="contact-card-text">
+        <div class="contact-card-title">Follow on Instagram</div>
+        <div class="contact-card-value">@luthencorps</div>
+      </div>
+      <div class="contact-card-arrow">→</div>
+    </a>
+
+    <!-- RESPONSE TIME -->
+    <div class="response-box">
+      <div class="response-dot"></div>
+      We typically respond within 24 hours on all channels.
+    </div>
+  </div>
+
+  <!-- RIGHT — FORM -->
+  <div class="contact-form-wrap reveal" id="contact-form">
+    <div class="form-head">
+      <div class="form-head-title">Send Us a Message</div>
+      <div class="form-head-badge">Free Consultation</div>
+    </div>
+
+    <div class="form-body" id="formBody">
+      <div class="form-row">
+        <div class="form-group">
+          <label>Your Name</label>
+          <input type="text" placeholder="e.g. Rahul Sharma" id="fname">
+        </div>
+        <div class="form-group">
+          <label>Email Address</label>
+          <input type="email" placeholder="you@example.com" id="femail">
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label>Phone / WhatsApp</label>
+          <input type="tel" placeholder="+91 XXXXX XXXXX" id="fphone">
+        </div>
+        <div class="form-group">
+          <label>I am a...</label>
+          <select id="ftype">
+            <option value="" disabled selected>Select one</option>
+            <option value="brand">Brand / Business</option>
+            <option value="affiliate">Affiliate / Creator</option>
+            <option value="other">Other</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label>Company / Brand Name (Optional)</label>
+        <input type="text" placeholder="e.g. My Brand Pvt. Ltd." id="fcompany">
+      </div>
+
+      <div class="form-group">
+        <label>Your Message</label>
+        <textarea placeholder="Tell us about your brand, goals, or what you're looking for..." id="fmessage"></textarea>
+      </div>
+
+      <button class="form-submit" onclick="handleSubmit()">
+        Send Message →
+      </button>
+      <p class="form-note">We'll get back to you within 24 hours.</p>
+    </div>
+
+    <!-- SUCCESS -->
+    <div class="success-msg" id="successMsg">
+      <div class="success-icon">✅</div>
+      <h3>Message Sent!</h3>
+      <p>Thanks for reaching out. Yatharth will personally get back to you within 24 hours.</p>
+    </div>
+  </div>
+</div>
+
+<!-- FAQ -->
+<section class="faq-section">
+  <div class="section-tag reveal">FAQs</div>
+  <h2 class="reveal">Quick Answers</h2>
+
+  <div class="faq-item reveal" onclick="toggleFaq(this)">
+    <div class="faq-q">How much does it cost to work with LuthenCorps? <span class="faq-icon">+</span></div>
+    <div class="faq-a">Our fee is performance-based — we take 15–20% of the total sales revenue generated through your affiliate program (negotiable based on program size). You only pay when sales actually happen. No upfront fees, no retainers.</div>
+  </div>
+
+  <div class="faq-item reveal" onclick="toggleFaq(this)">
+    <div class="faq-q">How long does it take to get my program live? <span class="faq-icon">+</span></div>
+    <div class="faq-a">We aim to have your affiliate program set up and live on Impact.com within 7 days of onboarding. Affiliate recruitment and first results typically follow within the first 2–4 weeks.</div>
+  </div>
+
+  <div class="faq-item reveal" onclick="toggleFaq(this)">
+    <div class="faq-q">I'm an affiliate — how do I join? <span class="faq-icon">+</span></div>
+    <div class="faq-a">Just drop us a message through WhatsApp or the form above. Tell us about your audience, niche, and what kind of brands you'd like to promote. We'll match you with the right opportunities.</div>
+  </div>
+
+  <div class="faq-item reveal" onclick="toggleFaq(this)">
+    <div class="faq-q">What commission do affiliates earn? <span class="faq-icon">+</span></div>
+    <div class="faq-a">Affiliates earn up to 20% commission on every confirmed sale they drive. The exact rate depends on the brand and product category. All commissions are tracked transparently through Impact.com.</div>
+  </div>
+
+  <div class="faq-item reveal" onclick="toggleFaq(this)">
+    <div class="faq-q">Are there any fixed costs? <span class="faq-icon">+</span></div>
+    <div class="faq-a">The only fixed cost is Impact.com's platform fee of <strong>$30/month (~₹2,500)</strong> — paid directly to Impact.com, not to us. Everything else is performance-based: our management fee (15–20%) and affiliate commissions (up to 20%) are only charged when actual sales happen. No sales, no extra cost.</div>
+  </div>
+
+  <div class="faq-item reveal" onclick="toggleFaq(this)">
+    <div class="faq-q">What kind of brands do you work with? <span class="faq-icon">+</span></div>
+    <div class="faq-a">We work with D2C brands, e-commerce businesses, SaaS products, and any brand selling online that wants to grow through performance-based affiliate marketing. If you sell online, we can help.</div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <a class="footer-logo" href="index.html">Luthen<span>Corps</span></a>
+  <div style="font-size:0.85rem; color:var(--muted);">📩 <a href="mailto:luthenaffiliates@luthencorps.space" style="color:var(--accent); text-decoration:none;">luthenaffiliates@luthencorps.space</a></div>
+  <ul class="footer-links">
+    <li><a href="about.html">About</a></li>
+    <li><a href="services.html">Services</a></li>
+    <li><a href="how-it-works.html">How It Works</a></li>
+    <li><a href="contact.html">Contact</a></li>
+  </ul>
+  <div class="footer-copy">© 2026 LuthenCorps. All rights reserved.</div>
+</footer>
+
+<script>
+  // Scroll reveal
+  const reveals = document.querySelectorAll('.reveal');
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach((entry, i) => {
+      if (entry.isIntersecting) {
+        setTimeout(() => entry.target.classList.add('visible'), i * 80);
+        observer.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.08 });
+  reveals.forEach(el => observer.observe(el));
+
+  // Nav shrink
+  const nav = document.querySelector('nav');
+  window.addEventListener('scroll', () => {
+    nav.style.padding = window.scrollY > 50 ? '12px 5%' : '20px 5%';
+  });
+
+  // FAQ toggle
+  function toggleFaq(item) {
+    const isOpen = item.classList.contains('open');
+    document.querySelectorAll('.faq-item').forEach(i => i.classList.remove('open'));
+    if (!isOpen) item.classList.add('open');
+  }
+
+  // Form submit — opens email client with prefilled details
+  function handleSubmit() {
+    const name = document.getElementById('fname').value.trim();
+    const email = document.getElementById('femail').value.trim();
+    const phone = document.getElementById('fphone').value.trim();
+    const type = document.getElementById('ftype').value;
+    const company = document.getElementById('fcompany').value.trim();
+    const message = document.getElementById('fmessage').value.trim();
+
+    if (!name || !email || !type || !message) {
+      alert('Please fill in your name, email, type, and message.');
+      return;
+    }
+
+    const subject = encodeURIComponent(`LuthenCorps Enquiry — ${type === 'brand' ? 'Brand' : type === 'affiliate' ? 'Affiliate' : 'General'} — ${name}`);
+    const body = encodeURIComponent(
+      `Name: ${name}\nEmail: ${email}\nPhone: ${phone || 'Not provided'}\nType: ${type}\nCompany: ${company || 'Not provided'}\n\nMessage:\n${message}`
+    );
+
+    window.location.href = `mailto:luthenaffiliates@luthencorps.space?subject=${subject}&body=${body}`;
+
+    // Show success
+    document.getElementById('formBody').style.display = 'none';
+    document.getElementById('successMsg').style.display = 'block';
+  }
+</script>
+</body>
+</html>

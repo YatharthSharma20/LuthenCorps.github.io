@@ -459,25 +459,13 @@
     position: relative;
   }
 
-  .how-card-stack {
+  .flow-card-main {
+    width: 100%;
+    padding: 32px;
     position: relative;
-    height: 420px;
-  }
-
-  .flow-card {
-    position: absolute;
     background: var(--card);
     border: 1px solid var(--border);
     border-radius: 16px;
-    padding: 24px;
-  }
-
-  .flow-card-main {
-    width: 100%;
-    top: 0;
-    left: 0;
-    right: 0;
-    padding: 32px;
   }
 
   .flow-card-main h3 {
@@ -506,25 +494,26 @@
     color: var(--accent);
   }
 
-  .flow-card-small {
-    width: 180px;
-    bottom: 0;
-    right: 0;
-    border-radius: 14px;
-    background: linear-gradient(135deg, rgba(123,92,255,0.15), rgba(200,240,74,0.08));
-    border-color: rgba(123,92,255,0.3);
-    text-align: center;
+  .flow-card-bottom {
+    margin-top: 16px;
+    padding: 14px 18px;
+    border-radius: 12px;
+    background: linear-gradient(135deg, rgba(123,92,255,0.12), rgba(200,240,74,0.07));
+    border: 1px solid rgba(123,92,255,0.25);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
   }
 
-  .flow-card-small .big-num {
+  .flow-card-bottom .big-num {
     font-family: 'Syne', sans-serif;
-    font-size: 2.5rem;
+    font-size: 1.5rem;
     font-weight: 800;
     color: var(--accent);
   }
 
-  .flow-card-small .small-label {
-    font-size: 0.78rem;
+  .flow-card-bottom .small-label {
+    font-size: 0.8rem;
     color: var(--muted);
   }
 
@@ -582,6 +571,9 @@
     border-radius: 20px;
     border: 1px solid var(--border);
     overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    flex-direction: column;
   }
 
   .for-card-head {
@@ -616,6 +608,7 @@
   .for-card-body {
     padding: 28px 32px;
     background: var(--card);
+    flex: 1;
   }
 
   .for-list {
@@ -762,12 +755,12 @@
 <nav>
   <a class="nav-logo" href="#">Luthen<span>Corps</span></a>
   <ul class="nav-links">
-    <li><a href="#services">Services</a></li>
+    <li><a href="about.html">About</a></li>
+    <li><a href="services.html">Services</a></li>
     <li><a href="#how">How It Works</a></li>
-    <li><a href="#who">For Who</a></li>
-    <li><a href="#contact">Contact</a></li>
+    <li><a href="contact.html">Contact</a></li>
   </ul>
-  <a class="nav-cta" href="#contact">Get Started →</a>
+  <a class="nav-cta" href="contact.html">Get Started →</a>
 </nav>
 
 <!-- HERO -->
@@ -782,7 +775,7 @@
   <p class="hero-sub">We build and manage high-performing affiliate programs — recruiting the best partners, tracking every rupee, and growing your revenue on autopilot.</p>
 
   <div class="hero-actions">
-    <a class="btn-primary" href="#contact">Work With Us →</a>
+    <a class="btn-primary" href="contact.html">Work With Us →</a>
     <a class="btn-outline" href="#how">See How It Works</a>
   </div>
 
@@ -913,33 +906,31 @@
     </div>
 
     <div class="how-visual reveal">
-      <div class="how-card-stack">
-        <div class="flow-card flow-card-main">
-          <h3>Program Dashboard</h3>
-          <div class="flow-metric">
-            <span class="flow-metric-label">Active Affiliates</span>
-            <span class="flow-metric-val">147</span>
-          </div>
-          <div class="flow-metric">
-            <span class="flow-metric-label">Monthly Clicks</span>
-            <span class="flow-metric-val">84,300</span>
-          </div>
-          <div class="flow-metric">
-            <span class="flow-metric-label">Conversions</span>
-            <span class="flow-metric-val">2,140</span>
-          </div>
-          <div class="flow-metric">
-            <span class="flow-metric-label">Revenue Driven</span>
-            <span class="flow-metric-val">₹42.6L</span>
-          </div>
-          <div class="flow-metric">
-            <span class="flow-metric-label">Avg. ROAS</span>
-            <span class="flow-metric-val">8.4×</span>
-          </div>
+      <div class="flow-card flow-card-main">
+        <h3>Program Dashboard</h3>
+        <div class="flow-metric">
+          <span class="flow-metric-label">Active Affiliates</span>
+          <span class="flow-metric-val">147</span>
         </div>
-        <div class="flow-card flow-card-small">
-          <div class="big-num">↑38%</div>
-          <div class="small-label">MoM Growth</div>
+        <div class="flow-metric">
+          <span class="flow-metric-label">Monthly Clicks</span>
+          <span class="flow-metric-val">84,300</span>
+        </div>
+        <div class="flow-metric">
+          <span class="flow-metric-label">Conversions</span>
+          <span class="flow-metric-val">2,140</span>
+        </div>
+        <div class="flow-metric">
+          <span class="flow-metric-label">Revenue Driven</span>
+          <span class="flow-metric-val">₹42.6L</span>
+        </div>
+        <div class="flow-metric">
+          <span class="flow-metric-label">Avg. ROAS</span>
+          <span class="flow-metric-val">8.4×</span>
+        </div>
+        <div class="flow-card-bottom">
+          <span class="small-label">Month-on-Month Growth</span>
+          <span class="big-num">↑ 38%</span>
         </div>
       </div>
     </div>
@@ -1006,12 +997,12 @@
       </div>
       <div class="for-card-body">
         <ul class="for-list">
-          <li>Get a fully managed affiliate program</li>
-          <li>We recruit the right affiliates tailored to your brand</li>
-          <li>Pay only for actual conversions (performance model)</li>
-          <li>Full Impact.com program setup & management</li>
-          <li>Monthly performance reports & strategy calls</li>
-          <li>Brand-safe affiliate vetting & compliance</li>
+          <li>Full affiliate program setup on Impact.com</li>
+          <li>We find & recruit affiliates that fit your brand</li>
+          <li>You only pay when real sales happen — zero risk</li>
+          <li>We handle affiliate onboarding & communication</li>
+          <li>Every affiliate is vetted before being approved</li>
+          <li>Regular performance updates so you're always in the loop</li>
         </ul>
       </div>
     </div>
@@ -1021,17 +1012,17 @@
         <div class="for-card-icon">👤</div>
         <div>
           <h3>For Affiliates</h3>
-          <p>Want premium brands to promote?</p>
+          <p>Want quality brands to promote?</p>
         </div>
       </div>
       <div class="for-card-body">
         <ul class="for-list">
-          <li>Access exclusive brand partnership opportunities</li>
-          <li>Competitive commission rates (up to 20%)</li>
-          <li>Fast approvals — get started in 24 hours</li>
-          <li>Dedicated account manager for support</li>
-          <li>Timely & reliable commission payouts</li>
-          <li>Co-branded creatives & promotional materials</li>
+          <li>Get connected with brands actively looking for affiliates</li>
+          <li>Earn up to 20% commission on every sale you drive</li>
+          <li>We match you with brands that fit your niche & audience</li>
+          <li>Simple onboarding — we guide you through every step</li>
+          <li>Transparent tracking — know exactly what you've earned</li>
+          <li>We're in your corner — reach out anytime with questions</li>
         </ul>
       </div>
     </div>
@@ -1044,8 +1035,8 @@
   <h2 class="reveal">Ready to Scale Your<br>Affiliate Revenue?</h2>
   <p class="reveal">Book a free strategy call. We'll audit your current setup (or start from scratch) and show you exactly how we'll grow your program.</p>
   <div class="cta-actions reveal">
-    <a class="btn-primary" href="mailto:hello@luthencorps.com">Book a Free Call →</a>
-    <a class="btn-outline" href="mailto:hello@luthencorps.com">Email Us</a>
+    <a class="btn-primary" href="contact.html#contact-form">Book a Free Call →</a>
+    <a class="btn-outline" href="contact.html">View All Contact Options</a>
   </div>
 </section>
 
@@ -1053,10 +1044,10 @@
 <footer>
   <a class="footer-logo" href="#">Luthen<span>Corps</span></a>
   <ul class="footer-links">
-    <li><a href="#services">Services</a></li>
+    <li><a href="services.html">Services</a></li>
+    <li><a href="contact.html">Contact</a></li>
     <li><a href="#how">How It Works</a></li>
     <li><a href="#who">For Who</a></li>
-    <li><a href="#contact">Contact</a></li>
   </ul>
   <div class="footer-copy">© 2026 LuthenCorps. All rights reserved.</div>
 </footer>

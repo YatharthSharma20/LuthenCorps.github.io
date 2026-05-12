@@ -1,0 +1,778 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>About Us — LuthenCorps</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #060608;
+    --bg2: #0d0d12;
+    --surface: #111118;
+    --border: rgba(255,255,255,0.07);
+    --accent: #c8f04a;
+    --accent2: #7b5cff;
+    --text: #f0f0f5;
+    --muted: #6b6b80;
+    --card: #13131c;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 16px;
+    line-height: 1.6;
+    overflow-x: hidden;
+  }
+
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.035'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 1000;
+    opacity: 0.4;
+  }
+
+  /* NAV */
+  nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 900;
+    padding: 20px 5%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 1px solid var(--border);
+    backdrop-filter: blur(20px);
+    background: rgba(6,6,8,0.8);
+    transition: padding 0.3s;
+  }
+
+  .nav-logo {
+    font-family: 'Syne', sans-serif;
+    font-weight: 800;
+    font-size: 1.3rem;
+    letter-spacing: -0.5px;
+    color: var(--text);
+    text-decoration: none;
+  }
+
+  .nav-logo span { color: var(--accent); }
+
+  .nav-links {
+    display: flex;
+    gap: 36px;
+    list-style: none;
+  }
+
+  .nav-links a {
+    color: var(--muted);
+    text-decoration: none;
+    font-size: 0.9rem;
+    font-weight: 500;
+    transition: color 0.2s;
+  }
+
+  .nav-links a:hover,
+  .nav-links a.active { color: var(--text); }
+
+  .nav-cta {
+    background: var(--accent);
+    color: #000;
+    font-weight: 700;
+    font-size: 0.88rem;
+    padding: 10px 22px;
+    border-radius: 100px;
+    text-decoration: none;
+    transition: opacity 0.2s, transform 0.2s;
+  }
+
+  .nav-cta:hover { opacity: 0.85; transform: translateY(-1px); }
+
+  /* PAGE HERO */
+  .page-hero {
+    padding: 160px 5% 100px;
+    position: relative;
+    overflow: hidden;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .hero-glow {
+    position: absolute;
+    width: 600px; height: 600px;
+    background: radial-gradient(circle, rgba(123,92,255,0.15) 0%, transparent 70%);
+    top: -100px; right: -100px;
+    pointer-events: none;
+  }
+
+  .hero-glow2 {
+    position: absolute;
+    width: 400px; height: 400px;
+    background: radial-gradient(circle, rgba(200,240,74,0.08) 0%, transparent 70%);
+    bottom: 0; left: 5%;
+    pointer-events: none;
+  }
+
+  .page-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(200,240,74,0.08);
+    border: 1px solid rgba(200,240,74,0.2);
+    color: var(--accent);
+    font-size: 0.82rem;
+    font-weight: 600;
+    padding: 6px 14px;
+    border-radius: 100px;
+    margin-bottom: 32px;
+    animation: fadeUp 0.6s ease both;
+  }
+
+  .page-hero h1 {
+    font-family: 'Syne', sans-serif;
+    font-weight: 800;
+    font-size: clamp(2.8rem, 6vw, 5.5rem);
+    line-height: 1.0;
+    letter-spacing: -2px;
+    max-width: 800px;
+    animation: fadeUp 0.6s 0.1s ease both;
+  }
+
+  .page-hero h1 em {
+    font-style: normal;
+    color: var(--accent);
+  }
+
+  .page-hero-sub {
+    margin-top: 24px;
+    font-size: 1.1rem;
+    color: var(--muted);
+    max-width: 540px;
+    font-weight: 300;
+    line-height: 1.75;
+    animation: fadeUp 0.6s 0.2s ease both;
+  }
+
+  /* MISSION SECTION */
+  .mission {
+    padding: 100px 5%;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 80px;
+    align-items: center;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .mission-text .section-tag {
+    font-size: 0.78rem;
+    font-weight: 700;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 20px;
+  }
+
+  .mission-text h2 {
+    font-family: 'Syne', sans-serif;
+    font-weight: 800;
+    font-size: clamp(1.8rem, 3vw, 2.6rem);
+    line-height: 1.15;
+    letter-spacing: -1px;
+    margin-bottom: 24px;
+  }
+
+  .mission-text p {
+    color: var(--muted);
+    font-size: 0.95rem;
+    line-height: 1.8;
+    margin-bottom: 16px;
+  }
+
+  .mission-text p:last-child { margin-bottom: 0; }
+
+  .mission-visual {
+    position: relative;
+  }
+
+  .mission-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 36px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .mission-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, var(--accent), var(--accent2));
+  }
+
+  .mission-card-quote {
+    font-family: 'Syne', sans-serif;
+    font-size: 1.3rem;
+    font-weight: 700;
+    line-height: 1.5;
+    margin-bottom: 28px;
+    color: var(--text);
+  }
+
+  .mission-card-quote span { color: var(--accent); }
+
+  .mission-pillars {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+  }
+
+  .pillar {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-size: 0.9rem;
+    color: var(--muted);
+  }
+
+  .pillar-dot {
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    background: var(--accent);
+    flex-shrink: 0;
+  }
+
+  /* FOUNDER SECTION */
+  .founder-section {
+    padding: 100px 5%;
+    background: var(--bg2);
+    border-bottom: 1px solid var(--border);
+  }
+
+  .founder-inner {
+    display: grid;
+    grid-template-columns: 1fr 1.4fr;
+    gap: 80px;
+    align-items: start;
+  }
+
+  .founder-left {
+    position: sticky;
+    top: 100px;
+  }
+
+  .founder-avatar {
+    width: 100%;
+    aspect-ratio: 3/4;
+    border-radius: 20px;
+    background: var(--card);
+    border: 1px solid var(--border);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 16px;
+    overflow: hidden;
+    position: relative;
+  }
+
+  .founder-avatar::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, rgba(200,240,74,0.05), rgba(123,92,255,0.08));
+  }
+
+  .avatar-initials {
+    font-family: 'Syne', sans-serif;
+    font-weight: 800;
+    font-size: 4rem;
+    color: var(--accent);
+    line-height: 1;
+    position: relative;
+  }
+
+  .avatar-label {
+    font-size: 0.8rem;
+    color: var(--muted);
+    position: relative;
+  }
+
+  .founder-meta {
+    margin-top: 20px;
+  }
+
+  .founder-name {
+    font-family: 'Syne', sans-serif;
+    font-weight: 800;
+    font-size: 1.4rem;
+    letter-spacing: -0.5px;
+  }
+
+  .founder-title {
+    color: var(--accent);
+    font-size: 0.85rem;
+    font-weight: 600;
+    margin-top: 4px;
+  }
+
+  .founder-badges {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 16px;
+  }
+
+  .badge {
+    background: rgba(255,255,255,0.05);
+    border: 1px solid var(--border);
+    border-radius: 100px;
+    padding: 5px 12px;
+    font-size: 0.78rem;
+    color: var(--muted);
+  }
+
+  /* STORY */
+  .founder-story {
+    display: flex;
+    flex-direction: column;
+    gap: 40px;
+  }
+
+  .story-block {
+    padding-bottom: 40px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .story-block:last-child {
+    border-bottom: none;
+    padding-bottom: 0;
+  }
+
+  .story-label {
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 14px;
+  }
+
+  .story-block h3 {
+    font-family: 'Syne', sans-serif;
+    font-weight: 700;
+    font-size: 1.3rem;
+    margin-bottom: 14px;
+    line-height: 1.3;
+  }
+
+  .story-block p {
+    color: var(--muted);
+    font-size: 0.95rem;
+    line-height: 1.85;
+  }
+
+  .story-block p + p { margin-top: 14px; }
+
+  .highlight-text {
+    font-size: 1.2rem;
+    font-weight: 500;
+    color: var(--text);
+    line-height: 1.6;
+    border-left: 3px solid var(--accent);
+    padding-left: 20px;
+    margin: 20px 0;
+    font-style: italic;
+  }
+
+  /* VALUES */
+  .values-section {
+    padding: 100px 5%;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .section-tag {
+    font-size: 0.78rem;
+    font-weight: 700;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 20px;
+  }
+
+  .section-title {
+    font-family: 'Syne', sans-serif;
+    font-weight: 800;
+    font-size: clamp(2rem, 4vw, 3rem);
+    line-height: 1.1;
+    letter-spacing: -1px;
+    max-width: 600px;
+    margin-bottom: 60px;
+  }
+
+  .values-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 2px;
+  }
+
+  .value-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    padding: 36px 32px;
+    position: relative;
+    overflow: hidden;
+    transition: border-color 0.3s, transform 0.3s;
+  }
+
+  .value-card:hover {
+    border-color: rgba(200,240,74,0.2);
+    transform: translateY(-4px);
+  }
+
+  .value-card::after {
+    content: '';
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, var(--accent), var(--accent2));
+    transform: scaleX(0);
+    transition: transform 0.3s;
+    transform-origin: left;
+  }
+
+  .value-card:hover::after { transform: scaleX(1); }
+
+  .value-icon {
+    font-size: 2rem;
+    margin-bottom: 20px;
+  }
+
+  .value-card h3 {
+    font-family: 'Syne', sans-serif;
+    font-weight: 700;
+    font-size: 1.05rem;
+    margin-bottom: 10px;
+  }
+
+  .value-card p {
+    color: var(--muted);
+    font-size: 0.88rem;
+    line-height: 1.65;
+  }
+
+  /* VISION BANNER */
+  .vision-banner {
+    margin: 0 5%;
+    border-radius: 24px;
+    padding: 60px 56px;
+    background: linear-gradient(135deg, rgba(200,240,74,0.08), rgba(123,92,255,0.1));
+    border: 1px solid rgba(200,240,74,0.15);
+    position: relative;
+    overflow: hidden;
+    margin-bottom: 100px;
+  }
+
+  .vision-banner::before {
+    content: '"';
+    position: absolute;
+    font-family: 'Syne', sans-serif;
+    font-size: 20rem;
+    font-weight: 800;
+    color: rgba(200,240,74,0.04);
+    top: -60px;
+    left: 20px;
+    line-height: 1;
+    pointer-events: none;
+  }
+
+  .vision-banner h2 {
+    font-family: 'Syne', sans-serif;
+    font-weight: 800;
+    font-size: clamp(1.6rem, 3vw, 2.4rem);
+    line-height: 1.3;
+    letter-spacing: -0.5px;
+    max-width: 700px;
+    margin-bottom: 20px;
+  }
+
+  .vision-banner h2 span { color: var(--accent); }
+
+  .vision-banner p {
+    color: var(--muted);
+    font-size: 0.95rem;
+    max-width: 520px;
+    line-height: 1.7;
+    margin-bottom: 32px;
+  }
+
+  .btn-primary {
+    background: var(--accent);
+    color: #000;
+    font-weight: 700;
+    font-size: 0.95rem;
+    padding: 14px 32px;
+    border-radius: 100px;
+    text-decoration: none;
+    display: inline-block;
+    transition: transform 0.2s, box-shadow 0.2s;
+    box-shadow: 0 0 40px rgba(200,240,74,0.25);
+  }
+
+  .btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 0 60px rgba(200,240,74,0.4);
+  }
+
+  /* FOOTER */
+  footer {
+    border-top: 1px solid var(--border);
+    padding: 48px 5%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 20px;
+  }
+
+  .footer-logo {
+    font-family: 'Syne', sans-serif;
+    font-weight: 800;
+    font-size: 1.1rem;
+    color: var(--text);
+    text-decoration: none;
+  }
+
+  .footer-logo span { color: var(--accent); }
+
+  .footer-links {
+    display: flex;
+    gap: 28px;
+    list-style: none;
+  }
+
+  .footer-links a {
+    color: var(--muted);
+    font-size: 0.85rem;
+    text-decoration: none;
+    transition: color 0.2s;
+  }
+
+  .footer-links a:hover { color: var(--text); }
+
+  .footer-copy { color: var(--muted); font-size: 0.8rem; }
+
+  /* ANIMATIONS */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(24px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .reveal {
+    opacity: 0;
+    transform: translateY(30px);
+    transition: opacity 0.7s ease, transform 0.7s ease;
+  }
+
+  .reveal.visible { opacity: 1; transform: none; }
+
+  /* RESPONSIVE */
+  @media (max-width: 768px) {
+    .nav-links { display: none; }
+    .mission { grid-template-columns: 1fr; gap: 40px; }
+    .founder-inner { grid-template-columns: 1fr; gap: 40px; }
+    .founder-left { position: static; }
+    .founder-avatar { aspect-ratio: 1/1; }
+    .vision-banner { padding: 40px 28px; margin: 0 4% 60px; }
+    .values-grid { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a class="nav-logo" href="index.html">Luthen<span>Corps</span></a>
+  <ul class="nav-links">
+    <li><a href="about.html" class="active">About</a></li>
+    <li><a href="services.html">Services</a></li>
+    <li><a href="index.html#how">How It Works</a></li>
+    <li><a href="contact.html">Contact</a></li>
+  </ul>
+  <a class="nav-cta" href="contact.html">Get Started →</a>
+</nav>
+
+<!-- PAGE HERO -->
+<section class="page-hero">
+  <div class="hero-glow"></div>
+  <div class="hero-glow2"></div>
+  <div class="page-tag">Our Story</div>
+  <h1>We're Not an Agency.<br>We're a <em>Movement.</em></h1>
+  <p class="page-hero-sub">LuthenCorps was born from a simple observation — India's affiliate marketing space was broken. We're here to fix it, one brand partnership at a time.</p>
+</section>
+
+<!-- MISSION -->
+<section class="mission">
+  <div class="mission-text reveal">
+    <div class="section-tag">Our Mission</div>
+    <h2>Bridging the Gap Between Brands & Affiliates</h2>
+    <p>Affiliate marketing in India is a ₹multi-crore opportunity that most brands are leaving on the table. Not because they don't want affiliates — but because managing them is messy, time-consuming, and full of guesswork.</p>
+    <p>On the flip side, thousands of talented content creators, bloggers, and digital marketers are sitting on audiences with no real brand to monetize them with.</p>
+    <p>LuthenCorps is the bridge. We sit between brands that need reach and affiliates who have it — creating partnerships that work for both sides.</p>
+  </div>
+
+  <div class="mission-visual reveal">
+    <div class="mission-card">
+      <div class="mission-card-quote">
+        "Affiliate marketing in India is <span>massively underutilized</span> — and that's exactly the opportunity we're after."
+      </div>
+      <div class="mission-pillars">
+        <div class="pillar"><span class="pillar-dot"></span>Performance-first — brands pay for real results</div>
+        <div class="pillar"><span class="pillar-dot"></span>Fair commissions — affiliates earn what they deserve</div>
+        <div class="pillar"><span class="pillar-dot"></span>Full transparency — no black boxes, no hidden cuts</div>
+        <div class="pillar"><span class="pillar-dot"></span>Long-term relationships — not one-time deals</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOUNDER -->
+<section class="founder-section">
+  <div class="founder-inner">
+
+    <div class="founder-left reveal">
+      <div class="founder-avatar">
+        <div class="avatar-initials">YS</div>
+        <div class="avatar-label">Photo coming soon</div>
+      </div>
+      <div class="founder-meta">
+        <div class="founder-name">Yatharth Sharma</div>
+        <div class="founder-title">Founder & CEO, LuthenCorps</div>
+        <div class="founder-badges">
+          <span class="badge">18 Years Old</span>
+          <span class="badge">College Student</span>
+          <span class="badge">Entrepreneur</span>
+          <span class="badge">Delhi, India</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="founder-story">
+
+      <div class="story-block reveal">
+        <div class="story-label">The Beginning</div>
+        <h3>A College Student Who Refused to Wait</h3>
+        <p>Most people wait until they're "ready" to start a business. Yatharth Sharma didn't get that memo. At 18 years old, sitting in college, he was already thinking about systems, markets, and gaps that nobody else was filling.</p>
+        <p>The idea for LuthenCorps didn't come from a textbook or a lecture. It came from watching the real world — seeing brands struggle to get traction and creators struggle to monetize their audiences, when the solution was sitting right there: connect them properly.</p>
+      </div>
+
+      <div class="story-block reveal">
+        <div class="story-label">The Insight</div>
+        <h3>The Gap Nobody Was Talking About</h3>
+        <p>India's digital economy is exploding. D2C brands are launching every day, content creators are growing their audiences at record speed, and affiliate marketing globally is a $17 billion industry. But in India? It's still massively untapped.</p>
+
+        <div class="highlight-text">
+          "Brands didn't have a reliable way to find and manage affiliates. Affiliates didn't have a professional agency fighting for them. I wanted to build that — a real, transparent, performance-driven agency."
+          <br><br>— Yatharth Sharma
+        </div>
+
+        <p>That simple observation became the foundation of LuthenCorps — a company built not just to make money, but to professionalize an entire space that desperately needed it.</p>
+      </div>
+
+      <div class="story-block reveal">
+        <div class="story-label">The Ambition</div>
+        <h3>Building India's Most Trusted Affiliate Agency</h3>
+        <p>LuthenCorps is Yatharth's first venture — and he's building it with the hunger of someone who has everything to prove. The goal isn't just to run campaigns. It's to become the go-to name when any Indian brand thinks "affiliate marketing."</p>
+        <p>Young, hungry, and relentlessly focused — this is a founder who sees the long game clearly and is willing to do the hard work to get there. LuthenCorps isn't just a startup. It's a statement that you don't need decades of experience to build something real. You just need the right idea, the right timing, and the drive to execute.</p>
+      </div>
+
+      <div class="story-block reveal">
+        <div class="story-label">The Vision</div>
+        <h3>Where We're Going</h3>
+        <p>The roadmap is clear: start lean, deliver exceptional results for every brand and affiliate partner, and scale with integrity. No fake numbers. No empty promises. Just real partnerships, real revenue, and real growth.</p>
+        <p>In 5 years, Yatharth envisions LuthenCorps as India's leading affiliate management ecosystem — the platform that every D2C brand trusts and every affiliate wants to be part of.</p>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- VALUES -->
+<section class="values-section">
+  <div class="reveal">
+    <div class="section-tag">What We Stand For</div>
+    <h2 class="section-title">Our Core Values</h2>
+  </div>
+
+  <div class="values-grid reveal">
+    <div class="value-card">
+      <div class="value-icon">🤝</div>
+      <h3>Honesty First</h3>
+      <p>We don't overpromise. We tell brands exactly what we can deliver and affiliates exactly what they'll earn. No surprises, no fine print.</p>
+    </div>
+    <div class="value-card">
+      <div class="value-icon">📈</div>
+      <h3>Results Over Optics</h3>
+      <p>We don't care about looking busy. We care about moving numbers — clicks, conversions, and revenue. That's the only scorecard that matters.</p>
+    </div>
+    <div class="value-card">
+      <div class="value-icon">⚡</div>
+      <h3>Bias For Action</h3>
+      <p>We move fast. In a space that changes daily, waiting for perfect is the enemy of progress. We launch, learn, and optimize quickly.</p>
+    </div>
+    <div class="value-card">
+      <div class="value-icon">🛡️</div>
+      <h3>Integrity Always</h3>
+      <p>Every brand we work with, every affiliate we onboard — they trust us with their reputation. We protect that trust fiercely.</p>
+    </div>
+  </div>
+</section>
+
+<!-- VISION BANNER -->
+<div class="vision-banner reveal">
+  <h2>We're just getting started —<br>and we want <span>you with us.</span></h2>
+  <p>Whether you're a brand looking to grow through affiliates or a creator looking for quality brands to promote — LuthenCorps was built for you. Let's build something real together.</p>
+  <a class="btn-primary" href="contact.html#contact-form">Work With Us →</a>
+  <!-- <a class="btn-outline" href="contact.html">View All Contact Options</a> -->
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <a class="footer-logo" href="index.html">Luthen<span>Corps</span></a>
+  <div style="font-size:0.85rem; color:var(--muted);">📩 <a href="mailto:luthenaffiliates@luthencorps.space" style="color:var(--accent); text-decoration:none;">luthenaffiliates@luthencorps.space</a></div>
+  <ul class="footer-links">
+    <li><a href="about.html" class="active">About</a></li>
+    <li><a href="services.html">Services</a></li>
+    <li><a href="contact.html">Contact</a></li>
+    <li><a href="index.html#how">How It Works</a></li>
+  </ul>
+  <div class="footer-copy">© 2026 LuthenCorps. All rights reserved.</div>
+</footer>
+
+<script>
+  const reveals = document.querySelectorAll('.reveal');
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach((entry, i) => {
+      if (entry.isIntersecting) {
+        setTimeout(() => entry.target.classList.add('visible'), i * 80);
+        observer.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.1 });
+  reveals.forEach(el => observer.observe(el));
+
+  const nav = document.querySelector('nav');
+  window.addEventListener('scroll', () => {
+    nav.style.padding = window.scrollY > 50 ? '12px 5%' : '20px 5%';
+  });
+</script>
+</body>
+</html>
