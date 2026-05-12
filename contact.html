@@ -646,7 +646,7 @@
     </a>
 
     <!-- EMAIL -->
-    <a class="contact-card email" href="mailto:luthenaffiliates@luthencorps.space">
+    <a class="contact-card email" href="https://mail.google.com/mail/?view=cm&to=luthenaffiliates@luthencorps.space&su=Enquiry%20via%20LuthenCorps%20Website" target="_blank">
       <div class="contact-card-icon">📩</div>
       <div class="contact-card-text">
         <div class="contact-card-title">Send Us an Email</div>
@@ -673,7 +673,7 @@
   </div>
 
   <!-- RIGHT — FORM -->
-  <div class="contact-form-wrap reveal" id="contact-form">
+  <div class="contact-form-wrap reveal">
     <div class="form-head">
       <div class="form-head-title">Send Us a Message</div>
       <div class="form-head-badge">Free Consultation</div>
@@ -807,8 +807,8 @@
     if (!isOpen) item.classList.add('open');
   }
 
-  // Form submit — opens email client with prefilled details
-  function handleSubmit() {
+  // Form submit — sends via Web3Forms
+  async function handleSubmit() {
     const name = document.getElementById('fname').value.trim();
     const email = document.getElementById('femail').value.trim();
     const phone = document.getElementById('fphone').value.trim();
@@ -821,16 +821,45 @@
       return;
     }
 
-    const subject = encodeURIComponent(`LuthenCorps Enquiry — ${type === 'brand' ? 'Brand' : type === 'affiliate' ? 'Affiliate' : 'General'} — ${name}`);
-    const body = encodeURIComponent(
-      `Name: ${name}\nEmail: ${email}\nPhone: ${phone || 'Not provided'}\nType: ${type}\nCompany: ${company || 'Not provided'}\n\nMessage:\n${message}`
-    );
+    const btn = document.querySelector('.form-submit');
+    btn.textContent = 'Sending…';
+    btn.disabled = true;
 
-    window.location.href = `mailto:luthenaffiliates@luthencorps.space?subject=${subject}&body=${body}`;
+    const subject = `LuthenCorps Enquiry — ${type === 'brand' ? 'Brand' : type === 'affiliate' ? 'Affiliate' : 'General'} — ${name}`;
 
-    // Show success
-    document.getElementById('formBody').style.display = 'none';
-    document.getElementById('successMsg').style.display = 'block';
+    const formData = {
+      access_key: '48ea6248-f273-4111-99a6-47d5e30be0ba',
+      subject: subject,
+      name: name,
+      email: email,
+      phone: phone || 'Not provided',
+      type: type,
+      company: company || 'Not provided',
+      message: message,
+      from_name: 'LuthenCorps Contact Form'
+    };
+
+    try {
+      const res = await fetch('https://api.web3forms.com/submit', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+        body: JSON.stringify(formData)
+      });
+      const data = await res.json();
+
+      if (data.success) {
+        document.getElementById('formBody').style.display = 'none';
+        document.getElementById('successMsg').style.display = 'block';
+      } else {
+        alert('Something went wrong. Please try again or reach us on WhatsApp.');
+        btn.textContent = 'Send Message →';
+        btn.disabled = false;
+      }
+    } catch (err) {
+      alert('Network error. Please check your connection and try again.');
+      btn.textContent = 'Send Message →';
+      btn.disabled = false;
+    }
   }
 </script>
 </body>
