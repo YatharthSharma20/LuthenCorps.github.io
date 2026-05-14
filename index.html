@@ -713,7 +713,13 @@
   /* FOOTER */
   footer {
     border-top: 1px solid var(--border);
-    padding: 48px 5%;
+    padding: 48px 5% 32px;
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+  }
+
+  .footer-main {
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -749,6 +755,20 @@
   .footer-copy {
     color: var(--muted);
     font-size: 0.8rem;
+  }
+
+  .footer-disclaimer {
+    padding-top: 20px;
+    border-top: 1px solid var(--border);
+    color: var(--muted);
+    font-size: 0.75rem;
+    line-height: 1.6;
+    max-width: 900px;
+  }
+
+  .footer-disclaimer strong {
+    color: var(--text);
+    font-weight: 600;
   }
 
   /* ANIMATIONS */
@@ -1075,14 +1095,19 @@
 
 <!-- FOOTER -->
 <footer>
-  <a class="footer-logo" href="#">Luthen<span>Corps</span></a>
-  <ul class="footer-links">
-    <li><a href="services.html">Services</a></li>
-    <li><a href="contact.html">Contact</a></li>
-    <li><a href="how-it-works.html">How It Works</a></li>
-    <li><a href="#who">For Who</a></li>
-  </ul>
-  <div class="footer-copy">© 2026 LuthenCorps. All rights reserved.</div>
+  <div class="footer-main">
+    <a class="footer-logo" href="#">Luthen<span>Corps</span></a>
+    <ul class="footer-links">
+      <li><a href="services.html">Services</a></li>
+      <li><a href="contact.html">Contact</a></li>
+      <li><a href="how-it-works.html">How It Works</a></li>
+      <li><a href="#who">For Who</a></li>
+    </ul>
+    <div class="footer-copy">© 2026 LuthenCorps. All rights reserved.</div>
+  </div>
+  <div class="footer-disclaimer">
+    <strong>Disclaimer:</strong> All metrics, statistics, and performance data displayed on this website (including but not limited to brand clients, monthly revenue, affiliate counts, conversion rates, and ROAS figures) are illustrative examples and placeholders only. They do not represent actual business performance or verified analytics.
+  </div>
 </footer>
 
 <script>
