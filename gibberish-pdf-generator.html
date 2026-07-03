@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Gibberish PDF Generator</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<style>
+  :root{
+    --bg:#0f1115;
+    --panel:#171a21;
+    --ink:#e9ebf0;
+    --muted:#8a90a2;
+    --accent:#7c9eff;
+    --accent-ink:#0f1115;
+    --line:#262b36;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    min-height:100vh;
+    background:var(--bg);
+    color:var(--ink);
+    font-family:'Georgia', 'Times New Roman', serif;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    padding:40px 20px;
+  }
+  .card{
+    width:100%;
+    max-width:480px;
+    background:var(--panel);
+    border:1px solid var(--line);
+    border-radius:14px;
+    padding:36px 34px 30px;
+  }
+  h1{
+    font-size:22px;
+    margin:0 0 6px;
+    font-weight:600;
+    letter-spacing:0.2px;
+  }
+  .sub{
+    color:var(--muted);
+    font-size:13.5px;
+    margin:0 0 28px;
+    line-height:1.5;
+    font-family:-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  }
+  label{
+    display:block;
+    font-size:12.5px;
+    text-transform:uppercase;
+    letter-spacing:1px;
+    color:var(--muted);
+    margin-bottom:8px;
+    font-family:-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  }
+  .row{
+    display:flex;
+    gap:12px;
+    margin-bottom:18px;
+  }
+  input[type=number]{
+    width:100%;
+    background:#0f1115;
+    border:1px solid var(--line);
+    color:var(--ink);
+    padding:12px 14px;
+    border-radius:8px;
+    font-size:16px;
+    font-family:-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  }
+  input[type=number]:focus{
+    outline:none;
+    border-color:var(--accent);
+  }
+  select{
+    width:100%;
+    background:#0f1115;
+    border:1px solid var(--line);
+    color:var(--ink);
+    padding:12px 14px;
+    border-radius:8px;
+    font-size:14px;
+    font-family:-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  }
+  .field{
+    margin-bottom:18px;
+  }
+  button{
+    width:100%;
+    background:var(--accent);
+    color:var(--accent-ink);
+    border:none;
+    padding:14px;
+    border-radius:8px;
+    font-size:15px;
+    font-weight:600;
+    cursor:pointer;
+    margin-top:8px;
+    font-family:-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    transition:opacity .15s ease;
+  }
+  button:hover{opacity:0.88;}
+  button:disabled{opacity:0.5; cursor:default;}
+  .status{
+    margin-top:14px;
+    font-size:12.5px;
+    color:var(--muted);
+    min-height:16px;
+    font-family:-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  }
+  .hint{
+    color:var(--muted);
+    font-size:11.5px;
+    margin-top:6px;
+    font-family:-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  }
+</style>
+</head>
+<body>
+
+<div class="card">
+  <h1>Gibberish PDF Generator</h1>
+  <p class="sub">Pick a page count, choose a filler style, and download a PDF stuffed with nonsense text — useful for testing uploads, storage limits, or just wasting someone's time.</p>
+
+  <div class="field">
+    <label for="pages">Number of pages</label>
+    <input type="number" id="pages" value="5" min="1" max="500">
+    <div class="hint">1–500 pages</div>
+  </div>
+
+  <div class="field">
+    <label for="style">Text style</label>
+    <select id="style">
+      <option value="latin">Faux-Latin (lorem-ipsum style)</option>
+      <option value="words">Random English words</option>
+      <option value="chars">Pure gibberish characters</option>
+      <option value="corporate">Fake corporate jargon</option>
+    </select>
+  </div>
+
+  <button id="genBtn" onclick="generatePDF()">Generate & Download PDF</button>
+  <div class="status" id="status"></div>
+</div>
+
+<script>
+const { jsPDF } = window.jspdf;
+
+const syllables = ["ba","ne","ti","mor","lux","quin","fex","dor","zan","ith","cal","um","ex","ora","vex","plum","sil","ten","gra","phon","ul","ari","cro","nex","dib","yon","sor","el","tra","ki"];
+function fakeLatinWord(){
+  const n = 1 + Math.floor(Math.random()*4);
+  let w = "";
+  for(let i=0;i<n;i++) w += syllables[Math.floor(Math.random()*syllables.length)];
+  return w;
+}
+
+const realWords = ["banana","protocol","umbrella","quantum","velvet","syrup","matrix","goose","penguin","orbit","cactus","whisper","thunder","noodle","gravity","pixel","marble","canyon","lantern","octopus","cushion","ferry","meadow","kernel","biscuit","volcano","tundra","cipher","harbor","satin"];
+
+const jargon = ["synergize","leverage","circle back on","action item","paradigm shift","bandwidth","low-hanging fruit","deep dive","move the needle","touch base","best-in-class","value-add","holistic approach","north star metric","stakeholder alignment","core competency","blue-sky thinking","operationalize","ideate","future-proof"];
+
+function randChar(){
+  const chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!?#%&*";
+  return chars[Math.floor(Math.random()*chars.length)];
+}
+
+function makeSentence(style){
+  let words = [];
+  const len = 6 + Math.floor(Math.random()*10);
+  for(let i=0;i<len;i++){
+    if(style === "latin") words.push(fakeLatinWord());
+    else if(style === "words") words.push(realWords[Math.floor(Math.random()*realWords.length)]);
+    else if(style === "corporate") words.push(jargon[Math.floor(Math.random()*jargon.length)]);
+    else { // chars
+      let w = "";
+      const wl = 3 + Math.floor(Math.random()*7);
+      for(let j=0;j<wl;j++) w += randChar();
+      words.push(w);
+    }
+  }
+  let sentence = words.join(" ");
+  sentence = sentence.charAt(0).toUpperCase() + sentence.slice(1) + ".";
+  return sentence;
+}
+
+function makeParagraph(style){
+  const sentences = 3 + Math.floor(Math.random()*4);
+  let p = [];
+  for(let i=0;i<sentences;i++) p.push(makeSentence(style));
+  return p.join(" ");
+}
+
+async function generatePDF(){
+  const btn = document.getElementById('genBtn');
+  const statusEl = document.getElementById('status');
+  const pages = Math.max(1, Math.min(500, parseInt(document.getElementById('pages').value) || 1));
+  const style = document.getElementById('style').value;
+
+  btn.disabled = true;
+  statusEl.textContent = "Generating...";
+
+  await new Promise(r => setTimeout(r, 30));
+
+  const doc = new jsPDF({ unit: "pt", format: "letter" });
+  const marginLeft = 56, marginTop = 60, marginRight = 56;
+  const pageWidth = doc.internal.pageSize.getWidth();
+  const pageHeight = doc.internal.pageSize.getHeight();
+  const usableWidth = pageWidth - marginLeft - marginRight;
+  const lineHeight = 16;
+  const maxY = pageHeight - 56;
+
+  doc.setFont("times", "normal");
+  doc.setFontSize(11);
+
+  for(let p = 0; p < pages; p++){
+    if(p > 0) doc.addPage();
+
+    doc.setFont("times", "bold");
+    doc.setFontSize(9);
+    doc.setTextColor(140,140,140);
+    doc.text(`Page ${p+1} of ${pages}`, marginLeft, 34);
+    doc.setTextColor(0,0,0);
+    doc.setFont("times", "normal");
+    doc.setFontSize(11);
+
+    let y = marginTop;
+    while(y < maxY){
+      const paragraph = makeParagraph(style);
+      const lines = doc.splitTextToSize(paragraph, usableWidth);
+      for(const line of lines){
+        if(y >= maxY) break;
+        doc.text(line, marginLeft, y);
+        y += lineHeight;
+      }
+      y += lineHeight * 0.6; // paragraph gap
+    }
+
+    if(p % 25 === 0){
+      statusEl.textContent = `Generating... page ${p+1} of ${pages}`;
+      await new Promise(r => setTimeout(r, 0));
+    }
+  }
+
+  doc.save(`gibberish_${pages}pages.pdf`);
+  statusEl.textContent = `Done — ${pages} page${pages>1?'s':''} generated.`;
+  btn.disabled = false;
+}
+</script>
+
+</body>
+</html>
