@@ -8,6 +8,7 @@
   "experience": "",
   "problem": "What problem did they face?",
   "description": "Brief description of what happened.",
+  "context": "Optional context about their work day, environment, or routine.",
   "process": [
     "Step 1: What they did first.",
     "Step 2: What they did next.",

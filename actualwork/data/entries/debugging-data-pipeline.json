@@ -23,8 +23,23 @@
     "platform": "youtube",
     "url": "https://youtu.be/PC92K1v6LMs"
   },
-  "tools": ["python", "airflow", "sql", "json"],
-  "workTypes": ["debugging", "data-engineering", "incident-response"],
-  "tags": ["pipeline", "debugging", "etl", "on-call", "data"],
+  "tools": [
+    "python",
+    "airflow",
+    "sql",
+    "json"
+  ],
+  "workTypes": [
+    "debugging",
+    "data-engineering",
+    "incident-response"
+  ],
+  "tags": [
+    "pipeline",
+    "debugging",
+    "etl",
+    "on-call",
+    "data"
+  ],
   "dateAdded": "2026-08-24"
 }

@@ -83,6 +83,96 @@ def esc(text):
     return html_module.escape(str(text))
 
 
+def description_to_text(desc):
+    """Convert a description (string or list) to a flat text string."""
+    if desc is None:
+        return ''
+    if isinstance(desc, list):
+        return ' '.join(str(item) for item in desc)
+    return str(desc)
+
+
+def slugify(text):
+    """Convert a display name or slug string to a URL-safe slug."""
+    slug = text.lower().strip()
+    slug = re.sub(r'[^a-z0-9]+', '-', slug)
+    slug = slug.strip('-')
+    return slug
+
+
+def slug_to_name(slug):
+    """Convert a slug like 'some-thing' to display name 'Some Thing'."""
+    return slug.replace('-', ' ').title()
+
+
+def auto_discover_entities(entries, occupations, industries, tools, tags):
+    """Scan entries and auto-discover any entities not in the master lists.
+
+    Returns updated copies of (occupations, industries, tools, tags, work_types).
+    """
+    occ_lookup = {o['id'] for o in occupations}
+    ind_lookup = {i['id'] for i in industries}
+    tool_lookup = {t['id'] for t in tools}
+    tag_lookup = {t['id'] for t in tags}
+
+    new_occupations = list(occupations)
+    new_industries = list(industries)
+    new_tools = list(tools)
+    new_tags = list(tags)
+    work_type_set = set()
+
+    for entry in entries:
+        # Occupations
+        occ_id = entry.get('occupation', '')
+        if occ_id and occ_id not in occ_lookup:
+            new_occupations.append({
+                'id': occ_id,
+                'name': slug_to_name(occ_id),
+                'description': ''
+            })
+            occ_lookup.add(occ_id)
+
+        # Industries
+        ind_id = entry.get('industry', '')
+        if ind_id and ind_id not in ind_lookup:
+            new_industries.append({
+                'id': ind_id,
+                'name': slug_to_name(ind_id),
+                'description': ''
+            })
+            ind_lookup.add(ind_id)
+
+        # Tools — entries may use display names or slugs
+        for tool_ref in entry.get('tools', []):
+            tool_slug = slugify(tool_ref)
+            if tool_slug not in tool_lookup:
+                new_tools.append({
+                    'id': tool_slug,
+                    'name': tool_ref  # preserve original display name
+                })
+                tool_lookup.add(tool_slug)
+
+        # Tags — entries may use display names or slugs
+        for tag_ref in entry.get('tags', []):
+            tag_slug = slugify(tag_ref)
+            if tag_slug not in tag_lookup:
+                new_tags.append({
+                    'id': tag_slug,
+                    'name': tag_ref
+                })
+                tag_lookup.add(tag_slug)
+
+        # Work types
+        for wt in entry.get('workTypes', []):
+            work_type_set.add(wt)
+
+    # Build work type objects
+    work_types = sorted([{'id': wt, 'name': slug_to_name(wt)} for wt in work_type_set],
+                        key=lambda x: x['name'])
+
+    return new_occupations, new_industries, new_tools, new_tags, work_types
+
+
 def youtube_embed_url(video_url):
     """Convert YouTube URL to embed URL."""
     # Handle youtu.be/ID
@@ -146,7 +236,8 @@ def render_header():
 <a href="{make_url('industries/')}">Industries</a>
 <a href="{make_url('tools/')}">Tools</a>
 <a href="{make_url('search/')}">Search</a>
-<a href="{make_url('submit/')}">Show Your Work</a>
+<a href="{make_url('submit/')}">Submit</a>
+<a href="{make_url('builder/')}">Builder</a>
 </nav>
 </div>
 </header>
@@ -159,7 +250,8 @@ def render_footer():
 <div class="footer-links">
 <a href="{make_url('/')}">Home</a>
 <a href="{make_url('search/')}">Search</a>
-<a href="{make_url('submit/')}">Show Your Work</a>
+<a href="{make_url('submit/')}">Submit</a>
+<a href="{make_url('builder/')}">Builder</a>
 <a href="{make_url('guidelines/')}">Contributor Guidelines</a>
 <a href="{make_url('content-policy/')}">Content Policy</a>
 <a href="{make_url('terms/')}">Terms of Use</a>
@@ -198,7 +290,7 @@ def render_entry_card(entry, occupations_lookup, show_description=True):
 
     desc_html = ''
     if show_description and entry.get('description'):
-        desc = entry['description']
+        desc = description_to_text(entry['description'])
         if len(desc) > 200:
             desc = desc[:200] + '…'
         desc_html = f'<div class="entry-description">{esc(desc)}</div>'
@@ -232,34 +324,42 @@ def generate_homepage(entries, occupations, industries, occupations_lookup):
         if occ:
             occ_counts[occ] = occ_counts.get(occ, 0) + 1
 
-    occ_html = ''
+    # Count entries per industry
+    ind_counts = {}
+    for e in entries:
+        ind = e.get('industry', '')
+        if ind:
+            ind_counts[ind] = ind_counts.get(ind, 0) + 1
+
+    popular_occ_html = ''
     if occupations:
-        items = []
-        for o in occupations:
-            count = occ_counts.get(o['id'], 0)
-            count_str = f' <span class="count">({count})</span>' if count > 0 else ''
-            items.append(f'<li class="category-item"><a href="{make_url("occupations/" + esc(o["id"]) + "/")}">{esc(o["name"])}</a>{count_str}</li>')
-        occ_html = f'''<h2 class="section-heading">Occupations</h2>
+        sorted_occs = [o for o in occupations if occ_counts.get(o['id'], 0) > 0]
+        sorted_occs.sort(key=lambda o: occ_counts.get(o['id'], 0), reverse=True)
+        top_occs = sorted_occs[:5]
+        if top_occs:
+            items = []
+            for o in top_occs:
+                count = occ_counts.get(o['id'], 0)
+                items.append(f'<li class="category-item"><a href="{make_url("occupations/" + esc(o["id"]) + "/")}">{esc(o["name"])}</a> <span class="count">({count})</span></li>')
+            popular_occ_html = f'''<h2 class="section-heading">Top Occupations</h2>
 <ul class="category-list">{"".join(items)}</ul>'''
 
-    ind_html = ''
+    popular_ind_html = ''
     if industries:
-        items = []
-        ind_counts = {}
-        for e in entries:
-            ind = e.get('industry', '')
-            if ind:
-                ind_counts[ind] = ind_counts.get(ind, 0) + 1
-        for i in industries:
-            count = ind_counts.get(i['id'], 0)
-            count_str = f' <span class="count">({count})</span>' if count > 0 else ''
-            items.append(f'<li class="category-item"><a href="{make_url("industries/" + esc(i["id"]) + "/")}">{esc(i["name"])}</a>{count_str}</li>')
-        ind_html = f'''<h2 class="section-heading">Industries</h2>
+        sorted_inds = [i for i in industries if ind_counts.get(i['id'], 0) > 0]
+        sorted_inds.sort(key=lambda i: ind_counts.get(i['id'], 0), reverse=True)
+        top_inds = sorted_inds[:3]
+        if top_inds:
+            items = []
+            for i in top_inds:
+                count = ind_counts.get(i['id'], 0)
+                items.append(f'<li class="category-item"><a href="{make_url("industries/" + esc(i["id"]) + "/")}">{esc(i["name"])}</a> <span class="count">({count})</span></li>')
+            popular_ind_html = f'''<h2 class="section-heading">Top Industries</h2>
 <ul class="category-list">{"".join(items)}</ul>'''
 
     recent_html = ''
     if entries:
-        recent = entries[:10]
+        recent = entries[:5]
         recent_html = f'''<h2 class="section-heading">Recently Added</h2>
 {render_entry_list(recent, occupations_lookup)}'''
 
@@ -277,8 +377,8 @@ def generate_homepage(entries, occupations, industries, occupations_lookup):
 </div>
 <hr>
 {recent_html}
-{occ_html}
-{ind_html}
+{popular_ind_html}
+{popular_occ_html}
 </main>
 '''
             + render_footer())
@@ -294,7 +394,7 @@ def generate_entry_page(entry, occupations_lookup, industries_lookup, tools_look
     experience = entry.get('experience', '')
 
     title = entry['title'] + ' — ActualWork'
-    desc = entry.get('description', entry.get('problem', ''))
+    desc = description_to_text(entry.get('description', '')) or entry.get('problem', '')
     if len(desc) > 160:
         desc = desc[:157] + '...'
 
@@ -329,16 +429,27 @@ def generate_entry_page(entry, occupations_lookup, industries_lookup, tools_look
     problem_html = ''
     if entry.get('problem'):
         problem_html = f'''<div class="entry-section">
-<h2>The Problem</h2>
+<h2>The Objective</h2>
 <p>{esc(entry["problem"])}</p>
 </div>'''
 
     # Description
     desc_html = ''
     if entry.get('description'):
+        raw_desc = entry['description']
+        if isinstance(raw_desc, list):
+            desc_items = ''.join(f'<li>{esc(item)}</li>' for item in raw_desc)
+            desc_body = f'<ul class="description-list">{desc_items}</ul>'
+        else:
+            desc_body = f'<p>{esc(raw_desc)}</p>'
+        context_body = ''
+        if entry.get('context'):
+            context_body = f'<p class="entry-context" style="color: #666; font-style: italic; margin-bottom: 1em;">{esc(entry["context"])}</p>'
+
         desc_html = f'''<div class="entry-section">
 <h2>What Happened</h2>
-<p>{esc(entry["description"])}</p>
+{context_body}
+{desc_body}
 </div>'''
 
     # Process
@@ -354,7 +465,7 @@ def generate_entry_page(entry, occupations_lookup, industries_lookup, tools_look
     result_html = ''
     if entry.get('result'):
         result_html = f'''<div class="entry-section">
-<h2>Result</h2>
+<h2>Conclusion</h2>
 <p>{esc(entry["result"])}</p>
 </div>'''
 
@@ -363,9 +474,10 @@ def generate_entry_page(entry, occupations_lookup, industries_lookup, tools_look
     if entry.get('tools'):
         tool_items = []
         for tid in entry['tools']:
-            tool = tools_lookup.get(tid, {})
+            tool_slug = slugify(tid)
+            tool = tools_lookup.get(tool_slug, {})
             name = tool.get('name', tid)
-            tool_items.append(f'<li><a href="{make_url("tools/" + esc(tid) + "/")}">{esc(name)}</a></li>')
+            tool_items.append(f'<li><a href="{make_url("tools/" + esc(tool_slug) + "/")}">{esc(name)}</a></li>')
         tools_html = f'''<div class="entry-section">
 <h2>Tools Used</h2>
 <ul class="tag-list">{"".join(tool_items)}</ul>
@@ -376,9 +488,10 @@ def generate_entry_page(entry, occupations_lookup, industries_lookup, tools_look
     if entry.get('tags'):
         tag_items = []
         for tid in entry['tags']:
-            tag = tags_lookup.get(tid, {})
+            tag_slug = slugify(tid)
+            tag = tags_lookup.get(tag_slug, {})
             name = tag.get('name', tid)
-            tag_items.append(f'<li><a href="{make_url("tags/" + esc(tid) + "/")}">{esc(name)}</a></li>')
+            tag_items.append(f'<li><a href="{make_url("tags/" + esc(tag_slug) + "/")}">{esc(name)}</a></li>')
         tags_html = f'''<div class="entry-section">
 <h2>Tags</h2>
 <ul class="tag-list">{"".join(tag_items)}</ul>
@@ -390,7 +503,7 @@ def generate_entry_page(entry, occupations_lookup, industries_lookup, tools_look
         wt_items = []
         for wt in entry['workTypes']:
             label = wt.replace('-', ' ').title()
-            wt_items.append(f'<li><span class="tag-item">{esc(label)}</span></li>')
+            wt_items.append(f'<li><a href="{make_url("work-types/" + esc(wt) + "/")}">{esc(label)}</a></li>')
         wt_html = f'''<div class="entry-section">
 <h2>Type of Work</h2>
 <ul class="tag-list">{"".join(wt_items)}</ul>
@@ -517,8 +630,8 @@ def generate_search_page(entries, occupations, industries, tools, occupations_lo
     search_entries = []
     for entry in entries:
         occ = occupations_lookup.get(entry.get('occupation', ''), {})
-        tool_names = [tools_lookup.get(t, {}).get('name', t) for t in entry.get('tools', [])]
-        tag_names = [tags_lookup.get(t, {}).get('name', t) for t in entry.get('tags', [])]
+        tool_names = [tools_lookup.get(slugify(t), {}).get('name', t) for t in entry.get('tools', [])]
+        tag_names = [tags_lookup.get(slugify(t), {}).get('name', t) for t in entry.get('tags', [])]
         search_text = ' '.join([
             entry.get('title', ''),
             entry.get('person', ''),
@@ -526,7 +639,7 @@ def generate_search_page(entries, occupations, industries, tools, occupations_lo
             entry.get('company', ''),
             entry.get('industry', ''),
             entry.get('problem', ''),
-            entry.get('description', ''),
+            description_to_text(entry.get('description', '')),
             ' '.join(tool_names),
             ' '.join(tag_names),
             ' '.join(entry.get('workTypes', []))
@@ -541,7 +654,7 @@ def generate_search_page(entries, occupations, industries, tools, occupations_lo
             'occupationName': occ.get('name', ''),
             'companyName': entry.get('company', ''),
             'industry': entry.get('industry', ''),
-            'description': entry.get('description', ''),
+            'description': description_to_text(entry.get('description', '')),
             'tools': entry.get('tools', []),
             'workTypes': entry.get('workTypes', []),
             'searchText': search_text
@@ -609,14 +722,14 @@ def generate_submit_page():
 <p>ActualWork is a curated archive. We collect videos where people show what they actually do at their jobs — the real problems, the real tools, the real process.</p>
 
 <h2>What we're looking for</h2>
-<p>Videos that show actual professional work. Not "day in my life" vlogs focused on coffee and commutes. Not motivational career advice. The actual work:</p>
+<p>Videos that show actual professional work. Not "day in my life" vlogs focused on coffee and commutes. Not motivational career advice. Small details about your day or environment are welcome as context, but the focus must remain on the actual work:</p>
 <ul>
 <li>What problem did you face?</li>
 <li>What tools did you use?</li>
 <li>What steps did you take?</li>
 <li>What went wrong?</li>
 <li>How did you fix it?</li>
-<li>What was the result?</li>
+<li>What was the conclusion?</li>
 </ul>
 
 <h2>How to submit</h2>
@@ -648,6 +761,221 @@ def generate_policy_page(slug, heading, content_html):
 {content_html}
 </main>
 '''
+            + render_footer())
+
+
+def generate_builder_page():
+    title = 'JSON Builder — ActualWork'
+    desc = 'Create and preview JSON entries for the ActualWork archive.'
+    
+    html = f'''<main class="site-container builder-page" style="max-width: 1200px;">
+<h1>JSON Entry Builder</h1>
+<p>Use this tool to easily format an ActualWork JSON entry. Fill out the fields on the left and the raw JSON will update on the right.</p>
+
+<div class="builder-layout" style="display: flex; flex-wrap: wrap; gap: 2rem; margin-top: 2rem;">
+    <!-- Form Side -->
+    <div class="builder-form" style="flex: 1; min-width: 300px; max-width: 600px;">
+        <form id="jsonForm">
+            <div class="form-group">
+                <label>ID (Filename)</label>
+                <input type="text" id="field_id" placeholder="e.g. software-engineer-day" class="form-control">
+                <small>Auto-generated from title if left blank</small>
+            </div>
+            <div class="form-group">
+                <label>Title *</label>
+                <input type="text" id="field_title" required class="form-control">
+            </div>
+            <div class="form-group">
+                <label>Person (Optional)</label>
+                <input type="text" id="field_person" class="form-control">
+            </div>
+            <div class="form-group">
+                <label>Occupation *</label>
+                <input type="text" id="field_occupation" placeholder="e.g. software-engineer" required class="form-control">
+            </div>
+            <div class="form-group">
+                <label>Company (Optional)</label>
+                <input type="text" id="field_company" class="form-control">
+            </div>
+            <div class="form-group">
+                <label>Industry *</label>
+                <input type="text" id="field_industry" placeholder="e.g. technology" required class="form-control">
+            </div>
+            <div class="form-group">
+                <label>Experience (Optional)</label>
+                <input type="text" id="field_experience" placeholder="e.g. 5 years" class="form-control">
+            </div>
+            <div class="form-group">
+                <label>Video Platform *</label>
+                <select id="field_platform" class="form-control">
+                    <option value="youtube">youtube</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label>Video URL *</label>
+                <input type="url" id="field_video_url" placeholder="https://youtube.com/watch?v=..." required class="form-control">
+            </div>
+            
+            <hr style="margin: 2rem 0;">
+            
+            <div class="form-group">
+                <label>Problem *</label>
+                <input type="text" id="field_problem" placeholder="What problem did they face?" required class="form-control">
+            </div>
+            <div class="form-group">
+                <label>Context (Optional)</label>
+                <textarea id="field_context" placeholder="Optional context about their work day or environment" rows="2" class="form-control"></textarea>
+            </div>
+            <div class="form-group">
+                <label>Description (Optional, multi-line allowed)</label>
+                <textarea id="field_description" placeholder="Brief description of what happened. One line per item to create a list." rows="3" class="form-control"></textarea>
+            </div>
+            
+            <div class="form-group">
+                <label>Process * (One step per line)</label>
+                <textarea id="field_process" placeholder="Step 1: ...&#10;Step 2: ..." rows="6" required class="form-control"></textarea>
+            </div>
+            <div class="form-group">
+                <label>Conclusion (Optional)</label>
+                <textarea id="field_conclusion" placeholder="What was the outcome?" rows="3" class="form-control"></textarea>
+            </div>
+            
+            <hr style="margin: 2rem 0;">
+            
+            <div class="form-group">
+                <label>Tools (Comma separated)</label>
+                <input type="text" id="field_tools" placeholder="python, sql, aws" class="form-control">
+            </div>
+            <div class="form-group">
+                <label>Tags (Comma separated)</label>
+                <input type="text" id="field_tags" placeholder="debugging, on-call, data" class="form-control">
+            </div>
+            <div class="form-group">
+                <label>Work Types (Comma separated)</label>
+                <input type="text" id="field_workTypes" placeholder="debugging, analysis" class="form-control">
+            </div>
+        </form>
+    </div>
+    
+    <!-- Preview Side -->
+    <div class="builder-preview" style="flex: 1; display: flex; flex-direction: column; min-width: 300px;">
+        <div class="preview-actions" style="margin-bottom: 1rem; display: flex; gap: 1rem;">
+            <button id="btn_copy" class="btn">Copy JSON</button>
+            <button id="btn_download" class="btn">Download File</button>
+        </div>
+        <pre id="json_output" style="background: #1e1e1e; color: #d4d4d4; padding: 1rem; border-radius: 4px; overflow-x: auto; flex: 1; margin: 0; min-height: 500px;">{{}}</pre>
+    </div>
+</div>
+
+<script>
+function slugify(text) {{
+    return text.toString().toLowerCase()
+        .replace(/\\s+/g, '-')
+        .replace(/[^\\w\\-]+/g, '')
+        .replace(/\\-\\-+/g, '-')
+        .replace(/^-+/, '')
+        .replace(/-+$/, '');
+}}
+
+function splitLines(text) {{
+    return text.split('\\n').map(l => l.trim()).filter(l => l.length > 0);
+}}
+
+function splitComma(text) {{
+    return text.split(',').map(l => l.trim()).filter(l => l.length > 0);
+}}
+
+function updateJson() {{
+    const idField = document.getElementById('field_id').value.trim();
+    const title = document.getElementById('field_title').value.trim();
+    
+    const id = idField || (title ? slugify(title) : '');
+    
+    const data = {{
+        id: id,
+        title: title,
+        person: document.getElementById('field_person').value.trim(),
+        occupation: document.getElementById('field_occupation').value.trim(),
+        company: document.getElementById('field_company').value.trim(),
+        industry: document.getElementById('field_industry').value.trim(),
+        experience: document.getElementById('field_experience').value.trim(),
+        video: {{
+            platform: document.getElementById('field_platform').value,
+            url: document.getElementById('field_video_url').value.trim()
+        }},
+        problem: document.getElementById('field_problem').value.trim(),
+        context: document.getElementById('field_context').value.trim()
+    }};
+    
+    const descLines = splitLines(document.getElementById('field_description').value);
+    if (descLines.length === 1) {{
+        data.description = descLines[0];
+    }} else if (descLines.length > 1) {{
+        data.description = descLines;
+    }} else {{
+        data.description = "";
+    }}
+    
+    data.process = splitLines(document.getElementById('field_process').value);
+    
+    const conclusion = document.getElementById('field_conclusion').value.trim();
+    if (conclusion) {{
+        data.result = conclusion;
+    }} else {{
+        data.result = "";
+    }}
+    
+    data.tools = splitComma(document.getElementById('field_tools').value);
+    data.tags = splitComma(document.getElementById('field_tags').value);
+    data.workTypes = splitComma(document.getElementById('field_workTypes').value);
+    
+    const jsonString = JSON.stringify(data, null, 2);
+    document.getElementById('json_output').textContent = jsonString;
+    return {{ jsonString, id }};
+}}
+
+document.getElementById('jsonForm').addEventListener('input', updateJson);
+
+document.getElementById('btn_copy').addEventListener('click', () => {{
+    const {{ jsonString }} = updateJson();
+    navigator.clipboard.writeText(jsonString).then(() => {{
+        const btn = document.getElementById('btn_copy');
+        btn.textContent = 'Copied!';
+        setTimeout(() => btn.textContent = 'Copy JSON', 2000);
+    }});
+}});
+
+document.getElementById('btn_download').addEventListener('click', () => {{
+    const {{ jsonString, id }} = updateJson();
+    const filename = (id || 'entry') + '.json';
+    const blob = new Blob([jsonString], {{ type: 'application/json' }});
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = filename;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+}});
+
+// Initialize
+updateJson();
+</script>
+<style>
+.form-group {{ margin-bottom: 1rem; }}
+.form-group label {{ display: block; margin-bottom: 0.25rem; font-weight: 600; color: var(--color-text); font-size: 0.9rem; }}
+.form-control {{ width: 100%; padding: 0.5rem; border: 1px solid var(--color-border); border-radius: 4px; font-family: inherit; font-size: 1rem; background: var(--color-bg); color: var(--color-text); box-sizing: border-box; }}
+.form-control:focus {{ outline: 2px solid var(--color-primary); border-color: transparent; }}
+.form-group small {{ color: #666; font-size: 0.8rem; display: block; margin-top: 0.25rem; }}
+.btn {{ padding: 0.5rem 1rem; border: none; border-radius: 4px; background: #e5e7eb; color: #374151; cursor: pointer; font-family: inherit; font-size: 1rem; font-weight: 600; transition: background 0.2s; }}
+.btn:hover {{ background: #d1d5db; }}
+</style>
+</main>'''
+
+    return (render_head(title, desc)
+            + render_header()
+            + html
             + render_footer())
 
 
@@ -834,24 +1162,50 @@ def build():
     print(f'  Output: {SCRIPT_DIR}')
     print()
 
-    # Load data
+    # Load data from master JSON files
     entries = load_entries()
-    occupations = load_json('occupations.json')
-    industries = load_json('industries.json')
-    tools = load_json('tools.json')
-    tags = load_json('tags.json')
+    occupations_base = load_json('occupations.json')
+    industries_base = load_json('industries.json')
+    tools_base = load_json('tools.json')
+    tags_base = load_json('tags.json')
+
+    print(f'  Loaded {len(entries)} entries')
+    print(f'  Loaded {len(occupations_base)} occupations (from JSON)')
+    print(f'  Loaded {len(industries_base)} industries (from JSON)')
+    print(f'  Loaded {len(tools_base)} tools (from JSON)')
+    print(f'  Loaded {len(tags_base)} tags (from JSON)')
+
+    # Auto-discover entities referenced in entries but missing from master lists
+    occupations, industries, tools, tags, work_types = auto_discover_entities(
+        entries, occupations_base, industries_base, tools_base, tags_base)
+
+    discovered_occ = len(occupations) - len(occupations_base)
+    discovered_ind = len(industries) - len(industries_base)
+    discovered_tools = len(tools) - len(tools_base)
+    discovered_tags = len(tags) - len(tags_base)
+    if discovered_occ or discovered_ind or discovered_tools or discovered_tags:
+        print(f'  Auto-discovered: {discovered_occ} occupations, {discovered_ind} industries, '
+              f'{discovered_tools} tools, {discovered_tags} tags')
+    print(f'  Collected {len(work_types)} work types from entries')
+    print()
 
     occupations_lookup = build_lookup(occupations)
     industries_lookup = build_lookup(industries)
     tools_lookup = build_lookup(tools)
     tags_lookup = build_lookup(tags)
+    work_types_lookup = build_lookup(work_types)
 
-    print(f'  Loaded {len(entries)} entries')
-    print(f'  Loaded {len(occupations)} occupations')
-    print(f'  Loaded {len(industries)} industries')
-    print(f'  Loaded {len(tools)} tools')
-    print(f'  Loaded {len(tags)} tags')
-    print()
+    # Helper: check if an entry uses a tool (by slug or display name)
+    def entry_has_tool(entry, tool_id):
+        return any(slugify(t) == tool_id for t in entry.get('tools', []))
+
+    # Helper: check if an entry has a tag (by slug or display name)
+    def entry_has_tag(entry, tag_id):
+        return any(slugify(t) == tag_id for t in entry.get('tags', []))
+
+    # Helper: check if an entry has a work type
+    def entry_has_work_type(entry, wt_id):
+        return wt_id in entry.get('workTypes', [])
 
     # Homepage
     write_page('index.html', generate_homepage(entries, occupations, industries, occupations_lookup))
@@ -895,13 +1249,13 @@ def build():
                                      'Browse work entries by tools used.',
                                      tools, entries, occupations_lookup,
                                      'tools/',
-                                     lambda tid: sum(1 for e in entries if tid in e.get('tools', []))))
+                                     lambda tid: sum(1 for e in entries if entry_has_tool(e, tid))))
 
     # Individual tool pages
     for tool in tools:
         write_page(f'tools/{tool["id"]}/index.html',
                    generate_category_detail_page(tool, entries, occupations_lookup,
-                                                  lambda e, tid: tid in e.get('tools', []),
+                                                  lambda e, tid: entry_has_tool(e, tid),
                                                   'Tool'))
 
     # Tag listing
@@ -910,14 +1264,30 @@ def build():
                                      'Browse work entries by tag.',
                                      tags, entries, occupations_lookup,
                                      'tags/',
-                                     lambda tid: sum(1 for e in entries if tid in e.get('tags', []))))
+                                     lambda tid: sum(1 for e in entries if entry_has_tag(e, tid))))
 
     # Individual tag pages
     for tag in tags:
         write_page(f'tags/{tag["id"]}/index.html',
                    generate_category_detail_page(tag, entries, occupations_lookup,
-                                                  lambda e, tid: tid in e.get('tags', []),
+                                                  lambda e, tid: entry_has_tag(e, tid),
                                                   'Tag'))
+
+    # Work type listing
+    if work_types:
+        write_page('work-types/index.html',
+                   generate_listing_page('Types of Work',
+                                         'Browse work entries by type of work.',
+                                         work_types, entries, occupations_lookup,
+                                         'work-types/',
+                                         lambda wtid: sum(1 for e in entries if entry_has_work_type(e, wtid))))
+
+        # Individual work type pages
+        for wt in work_types:
+            write_page(f'work-types/{wt["id"]}/index.html',
+                       generate_category_detail_page(wt, entries, occupations_lookup,
+                                                       lambda e, wtid: entry_has_work_type(e, wtid),
+                                                       'Type of Work'))
 
     # Search page
     write_page('search/index.html',
@@ -925,6 +1295,9 @@ def build():
 
     # Submit page
     write_page('submit/index.html', generate_submit_page())
+
+    # Builder page
+    write_page('builder/index.html', generate_builder_page())
 
     # Policy pages
     write_page('terms/index.html', generate_policy_page('terms', 'Terms of Use', TERMS_CONTENT))
@@ -937,6 +1310,7 @@ def build():
 
     print()
     print(f'Build complete. {len(entries)} entries processed.')
+    print(f'  Occupations: {len(occupations)} | Industries: {len(industries)} | Tools: {len(tools)} | Tags: {len(tags)} | Work Types: {len(work_types)}')
     print(f'Site available at: {BASE_PATH}/')
 
 

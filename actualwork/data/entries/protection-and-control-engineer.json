@@ -1,0 +1,76 @@
+{
+  "id": "ditl-electrical-engineering",
+  "title": "Day in the Life of an Electrical Engineer | Power Industry",
+  "person": "Janovic",
+  "occupation": "protection-and-controls-engineer",
+  "company": "",
+  "industry": "power-industry",
+  "experience": "",
+  "problem": "",
+  "description": [
+    "We’ll cover:",
+    "-Day in the life of an electrical engineer",
+    "-Electrical engineering work from home",
+    "-Power industry engineering",
+    "-Protection and controls engineering",
+    "-Substation design",
+    "-One-line,three-line and wiring diagrams",
+    "-Engineering project meetings and coordination",
+    "-What electrical engineers actually do"
+  ],
+  "process": [
+    "Started the workday around 7:30 AM by listing the most important tasks across several active substation projects.",
+    "Reviewed his own designs and peer-reviewed other engineers' work, checking for errors that could cause costly equipment failures or safety issues.",
+    "Worked on protection and controls for substations, ensuring breakers, relays, current transformers, and associated wiring would respond correctly during faults.",
+    "Joined project coordination calls with field teams, project managers, and other groups involved in permitting, environmental work, construction, and engineering.",
+    "Reviewed substation drawing packages, moving from high-level one-line diagrams to three-line diagrams showing CT connections and then detailed wiring diagrams used by field crews.",
+    "Checked a 230 kV circuit-breaker tripping scheme, comparing the wiring drawings against the elementary diagrams to verify that everything matched.",
+    "Used MicroStation to inspect and modify the engineering drawings, searching for equipment and checking connections digitally.",
+    "Discussed project tasks and updates with coworkers throughout the day and coordinated work across multiple active projects.",
+    "Finished the day by reviewing emails, recording notes for the next day's work, and wrapping up around 5:30 PM."
+  ],
+  "result": "Completed the engineering reviews and verified that the substation protection and control designs, wiring diagrams, and circuit-breaker tripping schemes matched. Left notes for the next day's work and wrapped up around 5:30 PM.",
+  "video": {
+    "platform": "youtube",
+    "url": "https://youtu.be/kg0dD-7ogRM?si=Ikkg3l-1Kbz-wMVk"
+  },
+  "tools": [
+    "MATLAB",
+    "Simulink",
+    "LabVIEW",
+    "AutoCAD",
+    "AutoCAD Electrical",
+    "Bentley MicroStation",
+    "Microsoft Teams",
+    "Microsoft Outlook",
+    "CAD",
+    "electrical simulation software"
+  ],
+  "workTypes": [
+    "electrical-design",
+    "substation-design",
+    "protection-and-controls",
+    "circuit-design",
+    "engineering-review",
+    "project-coordination",
+    "technical-documentation",
+    "hands-on-engineering",
+    "engineering-management",
+    "research-and-development"
+  ],
+  "tags": [
+    "electrical-engineering",
+    "power-industry",
+    "power-delivery",
+    "substations",
+    "protection-and-controls",
+    "circuit-design",
+    "CAD",
+    "renewables",
+    "power-systems",
+    "engineering-projects",
+    "internships",
+    "technical-communication"
+  ],
+  "dateAdded": "2026-08-25"
+}

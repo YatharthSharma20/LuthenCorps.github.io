@@ -388,6 +388,11 @@ code {
   margin-bottom: 0.5rem;
 }
 
+.entry-page-meta span + span::before {
+  content: ' · ';
+  color: #aaa;
+}
+
 .entry-page-meta a {
   color: #1a5276;
 }

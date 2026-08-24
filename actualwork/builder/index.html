@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>JSON Builder — ActualWork</title>
+<meta name="description" content="Create and preview JSON entries for the ActualWork archive.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Source+Sans+3:wght@300;400;500;600&family=Source+Serif+4:wght@400;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/actualwork/static/style.css">
+</head>
+<body>
+<header class="site-header">
+<div class="site-container">
+<a href="/actualwork/" class="site-title">ActualWork</a>
+<button class="nav-toggle" aria-expanded="false" aria-controls="main-nav">Menu</button>
+<nav class="site-nav" id="main-nav" aria-label="Main navigation">
+<a href="/actualwork/">Home</a>
+<a href="/actualwork/occupations/">Occupations</a>
+<a href="/actualwork/industries/">Industries</a>
+<a href="/actualwork/tools/">Tools</a>
+<a href="/actualwork/search/">Search</a>
+<a href="/actualwork/submit/">Submit</a>
+<a href="/actualwork/builder/">Builder</a>
+</nav>
+</div>
+</header>
+<main class="site-container builder-page" style="max-width: 1200px;">
+<h1>JSON Entry Builder</h1>
+<p>Use this tool to easily format an ActualWork JSON entry. Fill out the fields on the left and the raw JSON will update on the right.</p>
+
+<div class="builder-layout" style="display: flex; flex-wrap: wrap; gap: 2rem; margin-top: 2rem;">
+    <!-- Form Side -->
+    <div class="builder-form" style="flex: 1; min-width: 300px; max-width: 600px;">
+        <form id="jsonForm">
+            <div class="form-group">
+                <label>ID (Filename)</label>
+                <input type="text" id="field_id" placeholder="e.g. software-engineer-day" class="form-control">
+                <small>Auto-generated from title if left blank</small>
+            </div>
+            <div class="form-group">
+                <label>Title *</label>
+                <input type="text" id="field_title" required class="form-control">
+            </div>
+            <div class="form-group">
+                <label>Person (Optional)</label>
+                <input type="text" id="field_person" class="form-control">
+            </div>
+            <div class="form-group">
+                <label>Occupation *</label>
+                <input type="text" id="field_occupation" placeholder="e.g. software-engineer" required class="form-control">
+            </div>
+            <div class="form-group">
+                <label>Company (Optional)</label>
+                <input type="text" id="field_company" class="form-control">
+            </div>
+            <div class="form-group">
+                <label>Industry *</label>
+                <input type="text" id="field_industry" placeholder="e.g. technology" required class="form-control">
+            </div>
+            <div class="form-group">
+                <label>Experience (Optional)</label>
+                <input type="text" id="field_experience" placeholder="e.g. 5 years" class="form-control">
+            </div>
+            <div class="form-group">
+                <label>Video Platform *</label>
+                <select id="field_platform" class="form-control">
+                    <option value="youtube">youtube</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label>Video URL *</label>
+                <input type="url" id="field_video_url" placeholder="https://youtube.com/watch?v=..." required class="form-control">
+            </div>
+            
+            <hr style="margin: 2rem 0;">
+            
+            <div class="form-group">
+                <label>Problem *</label>
+                <input type="text" id="field_problem" placeholder="What problem did they face?" required class="form-control">
+            </div>
+            <div class="form-group">
+                <label>Context (Optional)</label>
+                <textarea id="field_context" placeholder="Optional context about their work day or environment" rows="2" class="form-control"></textarea>
+            </div>
+            <div class="form-group">
+                <label>Description (Optional, multi-line allowed)</label>
+                <textarea id="field_description" placeholder="Brief description of what happened. One line per item to create a list." rows="3" class="form-control"></textarea>
+            </div>
+            
+            <div class="form-group">
+                <label>Process * (One step per line)</label>
+                <textarea id="field_process" placeholder="Step 1: ...&#10;Step 2: ..." rows="6" required class="form-control"></textarea>
+            </div>
+            <div class="form-group">
+                <label>Conclusion (Optional)</label>
+                <textarea id="field_conclusion" placeholder="What was the outcome?" rows="3" class="form-control"></textarea>
+            </div>
+            
+            <hr style="margin: 2rem 0;">
+            
+            <div class="form-group">
+                <label>Tools (Comma separated)</label>
+                <input type="text" id="field_tools" placeholder="python, sql, aws" class="form-control">
+            </div>
+            <div class="form-group">
+                <label>Tags (Comma separated)</label>
+                <input type="text" id="field_tags" placeholder="debugging, on-call, data" class="form-control">
+            </div>
+            <div class="form-group">
+                <label>Work Types (Comma separated)</label>
+                <input type="text" id="field_workTypes" placeholder="debugging, analysis" class="form-control">
+            </div>
+        </form>
+    </div>
+    
+    <!-- Preview Side -->
+    <div class="builder-preview" style="flex: 1; display: flex; flex-direction: column; min-width: 300px;">
+        <div class="preview-actions" style="margin-bottom: 1rem; display: flex; gap: 1rem;">
+            <button id="btn_copy" class="btn">Copy JSON</button>
+            <button id="btn_download" class="btn">Download File</button>
+        </div>
+        <pre id="json_output" style="background: #1e1e1e; color: #d4d4d4; padding: 1rem; border-radius: 4px; overflow-x: auto; flex: 1; margin: 0; min-height: 500px;">{}</pre>
+    </div>
+</div>
+
+<script>
+function slugify(text) {
+    return text.toString().toLowerCase()
+        .replace(/\s+/g, '-')
+        .replace(/[^\w\-]+/g, '')
+        .replace(/\-\-+/g, '-')
+        .replace(/^-+/, '')
+        .replace(/-+$/, '');
+}
+
+function splitLines(text) {
+    return text.split('\n').map(l => l.trim()).filter(l => l.length > 0);
+}
+
+function splitComma(text) {
+    return text.split(',').map(l => l.trim()).filter(l => l.length > 0);
+}
+
+function updateJson() {
+    const idField = document.getElementById('field_id').value.trim();
+    const title = document.getElementById('field_title').value.trim();
+    
+    const id = idField || (title ? slugify(title) : '');
+    
+    const data = {
+        id: id,
+        title: title,
+        person: document.getElementById('field_person').value.trim(),
+        occupation: document.getElementById('field_occupation').value.trim(),
+        company: document.getElementById('field_company').value.trim(),
+        industry: document.getElementById('field_industry').value.trim(),
+        experience: document.getElementById('field_experience').value.trim(),
+        video: {
+            platform: document.getElementById('field_platform').value,
+            url: document.getElementById('field_video_url').value.trim()
+        },
+        problem: document.getElementById('field_problem').value.trim(),
+        context: document.getElementById('field_context').value.trim()
+    };
+    
+    const descLines = splitLines(document.getElementById('field_description').value);
+    if (descLines.length === 1) {
+        data.description = descLines[0];
+    } else if (descLines.length > 1) {
+        data.description = descLines;
+    } else {
+        data.description = "";
+    }
+    
+    data.process = splitLines(document.getElementById('field_process').value);
+    
+    const conclusion = document.getElementById('field_conclusion').value.trim();
+    if (conclusion) {
+        data.result = conclusion;
+    } else {
+        data.result = "";
+    }
+    
+    data.tools = splitComma(document.getElementById('field_tools').value);
+    data.tags = splitComma(document.getElementById('field_tags').value);
+    data.workTypes = splitComma(document.getElementById('field_workTypes').value);
+    
+    const jsonString = JSON.stringify(data, null, 2);
+    document.getElementById('json_output').textContent = jsonString;
+    return { jsonString, id };
+}
+
+document.getElementById('jsonForm').addEventListener('input', updateJson);
+
+document.getElementById('btn_copy').addEventListener('click', () => {
+    const { jsonString } = updateJson();
+    navigator.clipboard.writeText(jsonString).then(() => {
+        const btn = document.getElementById('btn_copy');
+        btn.textContent = 'Copied!';
+        setTimeout(() => btn.textContent = 'Copy JSON', 2000);
+    });
+});
+
+document.getElementById('btn_download').addEventListener('click', () => {
+    const { jsonString, id } = updateJson();
+    const filename = (id || 'entry') + '.json';
+    const blob = new Blob([jsonString], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = filename;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+});
+
+// Initialize
+updateJson();
+</script>
+<style>
+.form-group { margin-bottom: 1rem; }
+.form-group label { display: block; margin-bottom: 0.25rem; font-weight: 600; color: var(--color-text); font-size: 0.9rem; }
+.form-control { width: 100%; padding: 0.5rem; border: 1px solid var(--color-border); border-radius: 4px; font-family: inherit; font-size: 1rem; background: var(--color-bg); color: var(--color-text); box-sizing: border-box; }
+.form-control:focus { outline: 2px solid var(--color-primary); border-color: transparent; }
+.form-group small { color: #666; font-size: 0.8rem; display: block; margin-top: 0.25rem; }
+.btn { padding: 0.5rem 1rem; border: none; border-radius: 4px; background: #e5e7eb; color: #374151; cursor: pointer; font-family: inherit; font-size: 1rem; font-weight: 600; transition: background 0.2s; }
+.btn:hover { background: #d1d5db; }
+</style>
+</main><footer class="site-footer">
+<div class="site-container">
+<div class="footer-links">
+<a href="/actualwork/">Home</a>
+<a href="/actualwork/search/">Search</a>
+<a href="/actualwork/submit/">Submit</a>
+<a href="/actualwork/builder/">Builder</a>
+<a href="/actualwork/guidelines/">Contributor Guidelines</a>
+<a href="/actualwork/content-policy/">Content Policy</a>
+<a href="/actualwork/terms/">Terms of Use</a>
+<a href="/actualwork/privacy/">Privacy Policy</a>
+<a href="/actualwork/copyright/">Copyright &amp; Takedown</a>
+<a href="/actualwork/disclaimer/">Disclaimer</a>
+<a href="/actualwork/report/">Report Content</a>
+</div>
+<p>ActualWork is a public archive of what people actually do at work.</p>
+</div>
+</footer>
+<script src="/actualwork/static/main.js"></script>
+</body>
+</html>

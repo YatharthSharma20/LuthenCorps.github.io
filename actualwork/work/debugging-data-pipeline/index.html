@@ -21,7 +21,8 @@
 <a href="/actualwork/industries/">Industries</a>
 <a href="/actualwork/tools/">Tools</a>
 <a href="/actualwork/search/">Search</a>
-<a href="/actualwork/submit/">Show Your Work</a>
+<a href="/actualwork/submit/">Submit</a>
+<a href="/actualwork/builder/">Builder</a>
 </nav>
 </div>
 </header>
@@ -35,11 +36,12 @@
 <p style="text-align:center; padding: 2em; color: #888;">Loading video…</p>
 </div>
 <div class="entry-section">
-<h2>The Problem</h2>
+<h2>The Objective</h2>
 <p>A nightly ETL pipeline that feeds the analytics dashboard failed silently. The dashboard was showing stale data from two days ago, and the sales team had a board meeting in the morning.</p>
 </div>
 <div class="entry-section">
 <h2>What Happened</h2>
+
 <p>Priya walks through how she debugged a broken data pipeline — tracing the failure from the dashboard back through the orchestration layer, finding a schema change in an upstream API that broke the ingestion step, and deploying a fix before the morning meeting.</p>
 </div>
 <div class="entry-section">
@@ -47,7 +49,7 @@
 <ol class="process-list"><li>Got an alert at 2 AM that the dashboard data hadn&#x27;t refreshed.</li><li>Checked the Airflow DAG — the ingestion task had failed but the DAG itself showed &#x27;success&#x27; because of a misconfigured retry policy.</li><li>Looked at the ingestion logs. Found a JSON parsing error: a field that used to be a string was now an array.</li><li>Checked the upstream API changelog — they had pushed a breaking change without versioning.</li><li>Wrote a quick schema migration to handle both the old and new format.</li><li>Tested locally against a sample of the new API response.</li><li>Deployed the fix and triggered a manual backfill for the missing days.</li><li>Added a schema validation check at the ingestion step so this type of silent failure would be caught immediately in the future.</li></ol>
 </div>
 <div class="entry-section">
-<h2>Result</h2>
+<h2>Conclusion</h2>
 <p>Dashboard was showing fresh data by 5 AM. Added schema validation that has since caught three similar issues before they reached production.</p>
 </div>
 <div class="entry-section">
@@ -56,7 +58,7 @@
 </div>
 <div class="entry-section">
 <h2>Type of Work</h2>
-<ul class="tag-list"><li><span class="tag-item">Debugging</span></li><li><span class="tag-item">Data Engineering</span></li><li><span class="tag-item">Incident Response</span></li></ul>
+<ul class="tag-list"><li><a href="/actualwork/work-types/debugging/">Debugging</a></li><li><a href="/actualwork/work-types/data-engineering/">Data Engineering</a></li><li><a href="/actualwork/work-types/incident-response/">Incident Response</a></li></ul>
 </div>
 <div class="entry-section">
 <h2>Tags</h2>
@@ -76,7 +78,8 @@
 <div class="footer-links">
 <a href="/actualwork/">Home</a>
 <a href="/actualwork/search/">Search</a>
-<a href="/actualwork/submit/">Show Your Work</a>
+<a href="/actualwork/submit/">Submit</a>
+<a href="/actualwork/builder/">Builder</a>
 <a href="/actualwork/guidelines/">Contributor Guidelines</a>
 <a href="/actualwork/content-policy/">Content Policy</a>
 <a href="/actualwork/terms/">Terms of Use</a>

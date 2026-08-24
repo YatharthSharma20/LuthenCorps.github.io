@@ -34,7 +34,8 @@ data/
 | `industry` | No | Must match an `id` in `industries.json`. |
 | `experience` | No | Years of experience or level. |
 | `problem` | No | What problem they faced. |
-| `description` | No | Brief description of what happened. |
+| `description` | No | Brief description of what happened (string or array of strings). |
+| `context` | No | Optional context about their work day, environment, or routine. |
 | `process` | No | Array of strings — step by step what they did. |
 | `result` | No | What was the outcome. |
 | `video.platform` | Yes | Currently only `youtube`. |

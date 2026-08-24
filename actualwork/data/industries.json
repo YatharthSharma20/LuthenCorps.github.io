@@ -13,5 +13,10 @@
     "id": "construction",
     "name": "Construction",
     "description": "The industry of designing, building, and renovating physical structures — residential, commercial, and infrastructure."
+  },
+  {
+    "id": "power-industry",
+    "name": "Power Industry",
+    "description": "The power industry generates, transmits, and distributes electricity to homes, businesses, and factories."
   }
 ]
