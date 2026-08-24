@@ -1,0 +1,17 @@
+[
+  {
+    "id": "film-production",
+    "name": "Film Production",
+    "description": "The business of making films — from pre-production planning through shooting, post-production, and distribution."
+  },
+  {
+    "id": "technology",
+    "name": "Technology",
+    "description": "Companies and teams that build, maintain, and operate software systems and digital infrastructure."
+  },
+  {
+    "id": "construction",
+    "name": "Construction",
+    "description": "The industry of designing, building, and renovating physical structures — residential, commercial, and infrastructure."
+  }
+]

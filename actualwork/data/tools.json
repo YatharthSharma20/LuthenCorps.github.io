@@ -1,0 +1,13 @@
+[
+  {"id": "python", "name": "Python"},
+  {"id": "airflow", "name": "Apache Airflow"},
+  {"id": "sql", "name": "SQL"},
+  {"id": "json", "name": "JSON"},
+  {"id": "autocad", "name": "AutoCAD"},
+  {"id": "structural-calculations", "name": "Structural Calculations"},
+  {"id": "building-codes", "name": "Building Codes"},
+  {"id": "cameras", "name": "Cameras"},
+  {"id": "set-construction", "name": "Set Construction"},
+  {"id": "costume-design", "name": "Costume Design"},
+  {"id": "editing-software", "name": "Editing Software"}
+]

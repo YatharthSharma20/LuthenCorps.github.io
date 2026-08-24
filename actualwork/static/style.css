@@ -1,0 +1,604 @@
+/* ActualWork — Stylesheet
+   A clean, readable archive. Not a SaaS dashboard. */
+
+/* === Reset & Base === */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  font-size: 16px;
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  font-family: 'Source Sans 3', 'Source Sans Pro', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  line-height: 1.6;
+  color: #1a1a1a;
+  background: #fff;
+}
+
+/* === Typography === */
+h1, h2, h3, h4, h5, h6 {
+  font-family: 'Source Serif 4', 'Source Serif Pro', Georgia, 'Times New Roman', serif;
+  font-weight: 600;
+  line-height: 1.3;
+  color: #111;
+}
+
+h1 { font-size: 1.8rem; margin-bottom: 0.6em; }
+h2 { font-size: 1.4rem; margin-bottom: 0.5em; margin-top: 1.5em; }
+h3 { font-size: 1.15rem; margin-bottom: 0.4em; margin-top: 1.2em; }
+h4 { font-size: 1rem; margin-bottom: 0.3em; }
+
+p {
+  margin-bottom: 0.8em;
+  max-width: 65ch;
+}
+
+a {
+  color: #1a5276;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+a:hover {
+  color: #0e3a5c;
+}
+
+a:visited {
+  color: #4a235a;
+}
+
+ul, ol {
+  margin-bottom: 0.8em;
+  padding-left: 1.5em;
+}
+
+li {
+  margin-bottom: 0.3em;
+}
+
+blockquote {
+  border-left: 3px solid #ccc;
+  padding-left: 1em;
+  margin: 1em 0;
+  color: #444;
+  font-style: italic;
+}
+
+hr {
+  border: none;
+  border-top: 1px solid #ddd;
+  margin: 2em 0;
+}
+
+code {
+  font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
+  font-size: 0.9em;
+  background: #f4f4f4;
+  padding: 0.15em 0.35em;
+  border-radius: 2px;
+}
+
+/* === Layout === */
+.site-container {
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 0 1.5rem;
+}
+
+/* === Header === */
+.site-header {
+  border-bottom: 1px solid #ddd;
+  padding: 0.8rem 0;
+  background: #fff;
+}
+
+.site-header .site-container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.site-title {
+  font-family: 'Source Serif 4', 'Source Serif Pro', Georgia, serif;
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: #111;
+  text-decoration: none;
+  letter-spacing: -0.01em;
+}
+
+.site-title:visited {
+  color: #111;
+}
+
+.site-title:hover {
+  color: #333;
+}
+
+.site-nav {
+  display: flex;
+  gap: 1.2rem;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.site-nav a {
+  font-size: 0.9rem;
+  color: #444;
+  text-decoration: none;
+}
+
+.site-nav a:visited {
+  color: #444;
+}
+
+.site-nav a:hover {
+  color: #111;
+  text-decoration: underline;
+}
+
+/* Mobile nav toggle */
+.nav-toggle {
+  display: none;
+  background: none;
+  border: 1px solid #ccc;
+  padding: 0.3rem 0.6rem;
+  font-size: 0.9rem;
+  cursor: pointer;
+  color: #444;
+}
+
+@media (max-width: 600px) {
+  .nav-toggle {
+    display: block;
+  }
+
+  .site-nav {
+    display: none;
+    width: 100%;
+    flex-direction: column;
+    gap: 0.4rem;
+    padding-top: 0.5rem;
+  }
+
+  .site-nav.open {
+    display: flex;
+  }
+}
+
+/* === Footer === */
+.site-footer {
+  border-top: 1px solid #ddd;
+  padding: 1.5rem 0;
+  margin-top: 3rem;
+  font-size: 0.85rem;
+  color: #666;
+}
+
+.footer-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem 1.2rem;
+  margin-bottom: 0.8rem;
+}
+
+.footer-links a {
+  color: #666;
+  text-decoration: none;
+  font-size: 0.82rem;
+}
+
+.footer-links a:hover {
+  text-decoration: underline;
+  color: #333;
+}
+
+/* === Homepage === */
+.hero {
+  padding: 2.5rem 0 1.5rem;
+}
+
+.hero-motto {
+  font-family: 'Source Serif 4', 'Source Serif Pro', Georgia, serif;
+  font-size: 1.6rem;
+  font-weight: 700;
+  line-height: 1.3;
+  color: #111;
+  margin-bottom: 0.8rem;
+}
+
+@media (min-width: 600px) {
+  .hero-motto {
+    font-size: 2rem;
+  }
+}
+
+.hero-description {
+  font-size: 1.05rem;
+  color: #333;
+  max-width: 60ch;
+  margin-bottom: 1.2rem;
+  line-height: 1.65;
+}
+
+.hero-actions {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+  margin-bottom: 1rem;
+}
+
+.hero-actions a {
+  font-size: 0.95rem;
+}
+
+/* === Section headings === */
+.section-heading {
+  font-size: 1.15rem;
+  margin-top: 2rem;
+  margin-bottom: 0.6rem;
+  padding-bottom: 0.3rem;
+  border-bottom: 1px solid #eee;
+}
+
+.section-more {
+  font-size: 0.85rem;
+  margin-top: 0.3rem;
+}
+
+/* === Entry cards (lists) === */
+.entry-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.entry-item {
+  padding: 0.8rem 0;
+  border-bottom: 1px solid #eee;
+}
+
+.entry-item:last-child {
+  border-bottom: none;
+}
+
+.entry-title {
+  font-family: 'Source Serif 4', 'Source Serif Pro', Georgia, serif;
+  font-size: 1.05rem;
+  font-weight: 600;
+  margin-bottom: 0.2rem;
+}
+
+.entry-title a {
+  color: #1a5276;
+  text-decoration: none;
+}
+
+.entry-title a:hover {
+  text-decoration: underline;
+}
+
+.entry-meta {
+  font-size: 0.85rem;
+  color: #666;
+  margin-bottom: 0.25rem;
+}
+
+.entry-meta span + span::before {
+  content: ' · ';
+  color: #aaa;
+}
+
+.entry-description {
+  font-size: 0.9rem;
+  color: #444;
+  max-width: 65ch;
+}
+
+/* === Tag/category lists (inline) === */
+.tag-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  list-style: none;
+  padding: 0;
+  margin: 0.4rem 0;
+}
+
+.tag-list li a,
+.tag-item {
+  font-size: 0.8rem;
+  color: #555;
+  background: #f0f0f0;
+  padding: 0.15rem 0.5rem;
+  border: 1px solid #ddd;
+  text-decoration: none;
+  display: inline-block;
+}
+
+.tag-list li a:hover {
+  background: #e4e4e4;
+  color: #222;
+}
+
+/* === Category grid (occupations, industries, etc.) === */
+.category-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.category-item {
+  padding: 0.5rem 0;
+  border-bottom: 1px solid #eee;
+}
+
+.category-item:last-child {
+  border-bottom: none;
+}
+
+.category-item a {
+  text-decoration: none;
+  color: #1a5276;
+  font-weight: 500;
+}
+
+.category-item a:hover {
+  text-decoration: underline;
+}
+
+.category-item .count {
+  color: #888;
+  font-size: 0.85rem;
+  margin-left: 0.3rem;
+}
+
+.category-description {
+  font-size: 0.85rem;
+  color: #666;
+  margin-top: 0.1rem;
+}
+
+/* === Work Entry page === */
+.entry-page-header {
+  padding: 1.5rem 0 0.5rem;
+}
+
+.entry-page-title {
+  font-size: 1.5rem;
+  margin-bottom: 0.4rem;
+}
+
+@media (min-width: 600px) {
+  .entry-page-title {
+    font-size: 1.7rem;
+  }
+}
+
+.entry-page-meta {
+  font-size: 0.9rem;
+  color: #555;
+  margin-bottom: 0.5rem;
+}
+
+.entry-page-meta a {
+  color: #1a5276;
+}
+
+.video-container {
+  position: relative;
+  padding-bottom: 56.25%;
+  height: 0;
+  overflow: hidden;
+  margin: 1.2rem 0;
+  background: #000;
+}
+
+.video-container iframe {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  border: 0;
+}
+
+.entry-section {
+  margin: 1.5rem 0;
+}
+
+.entry-section h2 {
+  font-size: 1.1rem;
+  margin-top: 0;
+  margin-bottom: 0.4rem;
+  color: #222;
+}
+
+.process-list {
+  padding-left: 1.2em;
+  margin: 0;
+}
+
+.process-list li {
+  margin-bottom: 0.5em;
+  line-height: 1.55;
+  color: #333;
+}
+
+/* === Search === */
+.search-container {
+  margin: 1.5rem 0;
+}
+
+.search-input {
+  width: 100%;
+  max-width: 500px;
+  padding: 0.5rem 0.75rem;
+  font-size: 1rem;
+  font-family: inherit;
+  border: 1px solid #ccc;
+  background: #fff;
+  color: #111;
+}
+
+.search-input:focus {
+  outline: 2px solid #1a5276;
+  outline-offset: -1px;
+  border-color: #1a5276;
+}
+
+.search-info {
+  font-size: 0.85rem;
+  color: #888;
+  margin-top: 0.4rem;
+}
+
+.search-results {
+  margin-top: 1rem;
+}
+
+.no-results {
+  color: #666;
+  font-style: italic;
+  margin-top: 1rem;
+}
+
+/* === Filter bar === */
+.filter-bar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin: 1rem 0;
+  align-items: center;
+}
+
+.filter-bar label {
+  font-size: 0.85rem;
+  color: #555;
+  font-weight: 500;
+}
+
+.filter-bar select {
+  font-size: 0.85rem;
+  font-family: inherit;
+  padding: 0.3rem 0.5rem;
+  border: 1px solid #ccc;
+  background: #fff;
+  color: #111;
+}
+
+.filter-bar select:focus {
+  outline: 2px solid #1a5276;
+  outline-offset: -1px;
+}
+
+/* === Policy/legal pages === */
+.policy-page {
+  padding: 1.5rem 0;
+}
+
+.policy-page h1 {
+  margin-bottom: 0.8rem;
+}
+
+.policy-page h2 {
+  margin-top: 1.5rem;
+}
+
+.policy-page p,
+.policy-page li {
+  max-width: 65ch;
+}
+
+.policy-page .last-updated {
+  font-size: 0.85rem;
+  color: #888;
+  margin-bottom: 1.5rem;
+}
+
+/* === Submit/contribute page === */
+.submit-page {
+  padding: 1.5rem 0;
+}
+
+.submit-steps {
+  list-style: decimal;
+  padding-left: 1.5em;
+}
+
+.submit-steps li {
+  margin-bottom: 0.6em;
+  max-width: 65ch;
+}
+
+/* === Browse/listing pages === */
+.browse-page {
+  padding: 1.5rem 0;
+}
+
+.browse-page h1 {
+  margin-bottom: 0.5rem;
+}
+
+.browse-description {
+  color: #444;
+  margin-bottom: 1rem;
+  max-width: 65ch;
+}
+
+/* === Related entries === */
+.related-section {
+  margin-top: 2rem;
+  padding-top: 1rem;
+  border-top: 1px solid #eee;
+}
+
+.related-section h2 {
+  font-size: 1.05rem;
+  margin-top: 0;
+}
+
+/* === Utility === */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* === Print === */
+@media print {
+  .site-header,
+  .site-footer,
+  .search-container,
+  .filter-bar,
+  .nav-toggle {
+    display: none;
+  }
+
+  body {
+    font-size: 12pt;
+    color: #000;
+  }
+
+  a {
+    color: #000;
+    text-decoration: none;
+  }
+
+  .site-container {
+    max-width: none;
+  }
+}

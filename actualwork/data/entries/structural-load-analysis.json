@@ -1,0 +1,30 @@
+{
+  "id": "structural-load-analysis",
+  "title": "Checking Load Calculations for a Residential Renovation",
+  "person": "Marcus Webb",
+  "occupation": "structural-engineer",
+  "company": "",
+  "industry": "construction",
+  "experience": "8 years",
+  "problem": "A homeowner wanted to remove a load-bearing wall to create an open-plan kitchen. The contractor needed structural drawings and an engineer's stamp before the city would issue a permit.",
+  "description": "Marcus walks through the process of evaluating whether a load-bearing wall can be removed, calculating the required beam size to replace it, and producing the stamped drawings the city requires for a building permit.",
+  "process": [
+    "Visited the site and measured the existing structure — wall dimensions, span, floor-to-ceiling height.",
+    "Reviewed the original building plans from the city's records office. They were from 1978 and partially illegible.",
+    "Identified the load path: the wall was carrying roof loads and a portion of the second-floor joists.",
+    "Calculated the tributary area and determined the total load the replacement beam would need to carry.",
+    "Sized the beam using the National Design Specification for Wood Construction tables — ended up specifying a laminated veneer lumber (LVL) beam.",
+    "Checked the bearing points at each end of the beam. One end landed on the foundation. The other needed a new post carried down to a footing.",
+    "Drew up the structural details in AutoCAD and wrote the engineering letter.",
+    "Reviewed the final package, stamped the drawings, and sent them to the contractor for permit submission."
+  ],
+  "result": "Permit was approved on first submission. The contractor installed the beam and the renovation was completed without structural issues.",
+  "video": {
+    "platform": "youtube",
+    "url": "https://youtu.be/PC92K1v6LMs"
+  },
+  "tools": ["autocad", "structural-calculations", "building-codes"],
+  "workTypes": ["analysis", "design", "documentation"],
+  "tags": ["engineering", "construction", "permits", "structural", "residential"],
+  "dateAdded": "2026-08-23"
+}

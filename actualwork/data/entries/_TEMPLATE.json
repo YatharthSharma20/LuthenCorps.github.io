@@ -1,0 +1,27 @@
+{
+  "id": "unique-entry-id",
+  "title": "Title of the Work Entry",
+  "person": "Person Name",
+  "occupation": "Occupation",
+  "company": "",
+  "industry": "",
+  "experience": "",
+  "problem": "What problem did they face?",
+  "description": "Brief description of what happened.",
+  "process": [
+    "Step 1: What they did first.",
+    "Step 2: What they did next.",
+    "Step 3: What went wrong.",
+    "Step 4: How they fixed it.",
+    "Step 5: Final step."
+  ],
+  "result": "What was the outcome?",
+  "video": {
+    "platform": "youtube",
+    "url": "https://youtu.be/VIDEO_ID"
+  },
+  "tools": ["tool-id-1", "tool-id-2"],
+  "workTypes": ["work-type-1"],
+  "tags": ["tag-1", "tag-2"],
+  "dateAdded": "2026-01-01"
+}

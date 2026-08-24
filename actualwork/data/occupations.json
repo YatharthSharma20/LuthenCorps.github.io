@@ -1,0 +1,27 @@
+[
+  {
+    "id": "filmmaker",
+    "name": "Filmmaker",
+    "description": "Plans, directs, and oversees the production of films — coordinating crew, managing shoots, and making creative and logistical decisions throughout production."
+  },
+  {
+    "id": "data-engineer",
+    "name": "Data Engineer",
+    "description": "Builds and maintains the systems that collect, store, and process data — pipelines, databases, and infrastructure that other teams depend on for analytics and decision-making."
+  },
+  {
+    "id": "structural-engineer",
+    "name": "Structural Engineer",
+    "description": "Analyzes and designs structures to ensure they can safely support the loads they will carry — calculating forces, sizing structural members, and producing engineering drawings."
+  },
+  {
+    "id": "data-scientist",
+    "name": "Data Scientist",
+    "description": "Investigates data to find patterns, build models, and answer questions — writing code, running experiments, and communicating findings to inform decisions."
+  },
+  {
+    "id": "software-engineer",
+    "name": "Software Engineer",
+    "description": "Designs, writes, tests, and maintains software — solving technical problems, debugging issues, and building systems that users and other engineers depend on."
+  }
+]

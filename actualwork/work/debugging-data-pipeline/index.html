@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Debugging a Broken Data Pipeline at 2 AM — ActualWork</title>
+<meta name="description" content="Priya walks through how she debugged a broken data pipeline — tracing the failure from the dashboard back through the orchestration layer, finding a schema c...">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Source+Sans+3:wght@300;400;500;600&family=Source+Serif+4:wght@400;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/actualwork/static/style.css">
+</head>
+<body>
+<header class="site-header">
+<div class="site-container">
+<a href="/actualwork/" class="site-title">ActualWork</a>
+<button class="nav-toggle" aria-expanded="false" aria-controls="main-nav">Menu</button>
+<nav class="site-nav" id="main-nav" aria-label="Main navigation">
+<a href="/actualwork/">Home</a>
+<a href="/actualwork/occupations/">Occupations</a>
+<a href="/actualwork/industries/">Industries</a>
+<a href="/actualwork/tools/">Tools</a>
+<a href="/actualwork/search/">Search</a>
+<a href="/actualwork/submit/">Show Your Work</a>
+</nav>
+</div>
+</header>
+<main class="site-container">
+<div class="entry-page-header">
+<h1 class="entry-page-title">Debugging a Broken Data Pipeline at 2 AM</h1>
+<div class="entry-page-meta"><span>Priya Menon</span><span><a href="/actualwork/occupations/data-engineer/">Data Engineer</a></span><span><a href="/actualwork/industries/technology/">Technology</a></span><span>3 years experience</span></div>
+</div>
+<div class="video-container video-lazy" data-src="https://www.youtube-nocookie.com/embed/PC92K1v6LMs" data-title="Debugging a Broken Data Pipeline at 2 AM">
+<noscript><iframe src="https://www.youtube-nocookie.com/embed/PC92K1v6LMs" title="Debugging a Broken Data Pipeline at 2 AM" allowfullscreen></iframe></noscript>
+<p style="text-align:center; padding: 2em; color: #888;">Loading video…</p>
+</div>
+<div class="entry-section">
+<h2>The Problem</h2>
+<p>A nightly ETL pipeline that feeds the analytics dashboard failed silently. The dashboard was showing stale data from two days ago, and the sales team had a board meeting in the morning.</p>
+</div>
+<div class="entry-section">
+<h2>What Happened</h2>
+<p>Priya walks through how she debugged a broken data pipeline — tracing the failure from the dashboard back through the orchestration layer, finding a schema change in an upstream API that broke the ingestion step, and deploying a fix before the morning meeting.</p>
+</div>
+<div class="entry-section">
+<h2>The Actual Work</h2>
+<ol class="process-list"><li>Got an alert at 2 AM that the dashboard data hadn&#x27;t refreshed.</li><li>Checked the Airflow DAG — the ingestion task had failed but the DAG itself showed &#x27;success&#x27; because of a misconfigured retry policy.</li><li>Looked at the ingestion logs. Found a JSON parsing error: a field that used to be a string was now an array.</li><li>Checked the upstream API changelog — they had pushed a breaking change without versioning.</li><li>Wrote a quick schema migration to handle both the old and new format.</li><li>Tested locally against a sample of the new API response.</li><li>Deployed the fix and triggered a manual backfill for the missing days.</li><li>Added a schema validation check at the ingestion step so this type of silent failure would be caught immediately in the future.</li></ol>
+</div>
+<div class="entry-section">
+<h2>Result</h2>
+<p>Dashboard was showing fresh data by 5 AM. Added schema validation that has since caught three similar issues before they reached production.</p>
+</div>
+<div class="entry-section">
+<h2>Tools Used</h2>
+<ul class="tag-list"><li><a href="/actualwork/tools/python/">Python</a></li><li><a href="/actualwork/tools/airflow/">Apache Airflow</a></li><li><a href="/actualwork/tools/sql/">SQL</a></li><li><a href="/actualwork/tools/json/">JSON</a></li></ul>
+</div>
+<div class="entry-section">
+<h2>Type of Work</h2>
+<ul class="tag-list"><li><span class="tag-item">Debugging</span></li><li><span class="tag-item">Data Engineering</span></li><li><span class="tag-item">Incident Response</span></li></ul>
+</div>
+<div class="entry-section">
+<h2>Tags</h2>
+<ul class="tag-list"><li><a href="/actualwork/tags/pipeline/">Pipeline</a></li><li><a href="/actualwork/tags/debugging/">Debugging</a></li><li><a href="/actualwork/tags/etl/">ETL</a></li><li><a href="/actualwork/tags/on-call/">On-Call</a></li><li><a href="/actualwork/tags/data/">Data</a></li></ul>
+</div>
+<div class="entry-section">
+<h2>Original Video</h2>
+<p><a href="https://youtu.be/PC92K1v6LMs" target="_blank" rel="noopener noreferrer">Watch on Youtube</a></p>
+</div>
+<div class="entry-section" style="margin-top: 2rem; font-size: 0.85rem;">
+<a href="/actualwork/report/" style="color: #888;">Report or request removal of this content</a>
+</div>
+
+</main>
+<footer class="site-footer">
+<div class="site-container">
+<div class="footer-links">
+<a href="/actualwork/">Home</a>
+<a href="/actualwork/search/">Search</a>
+<a href="/actualwork/submit/">Show Your Work</a>
+<a href="/actualwork/guidelines/">Contributor Guidelines</a>
+<a href="/actualwork/content-policy/">Content Policy</a>
+<a href="/actualwork/terms/">Terms of Use</a>
+<a href="/actualwork/privacy/">Privacy Policy</a>
+<a href="/actualwork/copyright/">Copyright &amp; Takedown</a>
+<a href="/actualwork/disclaimer/">Disclaimer</a>
+<a href="/actualwork/report/">Report Content</a>
+</div>
+<p>ActualWork is a public archive of what people actually do at work.</p>
+</div>
+</footer>
+<script src="/actualwork/static/main.js"></script>
+</body>
+</html>

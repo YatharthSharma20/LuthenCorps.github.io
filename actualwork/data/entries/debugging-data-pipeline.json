@@ -1,0 +1,30 @@
+{
+  "id": "debugging-data-pipeline",
+  "title": "Debugging a Broken Data Pipeline at 2 AM",
+  "person": "Priya Menon",
+  "occupation": "data-engineer",
+  "company": "",
+  "industry": "technology",
+  "experience": "3 years",
+  "problem": "A nightly ETL pipeline that feeds the analytics dashboard failed silently. The dashboard was showing stale data from two days ago, and the sales team had a board meeting in the morning.",
+  "description": "Priya walks through how she debugged a broken data pipeline — tracing the failure from the dashboard back through the orchestration layer, finding a schema change in an upstream API that broke the ingestion step, and deploying a fix before the morning meeting.",
+  "process": [
+    "Got an alert at 2 AM that the dashboard data hadn't refreshed.",
+    "Checked the Airflow DAG — the ingestion task had failed but the DAG itself showed 'success' because of a misconfigured retry policy.",
+    "Looked at the ingestion logs. Found a JSON parsing error: a field that used to be a string was now an array.",
+    "Checked the upstream API changelog — they had pushed a breaking change without versioning.",
+    "Wrote a quick schema migration to handle both the old and new format.",
+    "Tested locally against a sample of the new API response.",
+    "Deployed the fix and triggered a manual backfill for the missing days.",
+    "Added a schema validation check at the ingestion step so this type of silent failure would be caught immediately in the future."
+  ],
+  "result": "Dashboard was showing fresh data by 5 AM. Added schema validation that has since caught three similar issues before they reached production.",
+  "video": {
+    "platform": "youtube",
+    "url": "https://youtu.be/PC92K1v6LMs"
+  },
+  "tools": ["python", "airflow", "sql", "json"],
+  "workTypes": ["debugging", "data-engineering", "incident-response"],
+  "tags": ["pipeline", "debugging", "etl", "on-call", "data"],
+  "dateAdded": "2026-08-24"
+}

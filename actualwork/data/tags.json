@@ -1,0 +1,16 @@
+[
+  {"id": "film", "name": "Film"},
+  {"id": "production", "name": "Production"},
+  {"id": "behind-the-scenes", "name": "Behind the Scenes"},
+  {"id": "collaboration", "name": "Collaboration"},
+  {"id": "pipeline", "name": "Pipeline"},
+  {"id": "debugging", "name": "Debugging"},
+  {"id": "etl", "name": "ETL"},
+  {"id": "on-call", "name": "On-Call"},
+  {"id": "data", "name": "Data"},
+  {"id": "engineering", "name": "Engineering"},
+  {"id": "construction", "name": "Construction"},
+  {"id": "permits", "name": "Permits"},
+  {"id": "structural", "name": "Structural"},
+  {"id": "residential", "name": "Residential"}
+]
