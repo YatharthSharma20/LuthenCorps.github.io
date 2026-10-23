@@ -1,0 +1,282 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Math Renderer — LaTeX to readable text</title>
+<script>
+  window.MathJax = {
+    tex: {
+      inlineMath: [['\\(', '\\)'], ['$', '$']],
+      displayMath: [['\\[', '\\]'], ['$$', '$$']],
+      processEscapes: true
+    },
+    options: { skipHtmlTags: ['script','noscript','style','textarea','pre','code'] },
+    startup: { typeset: false }
+  };
+</script>
+<script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+<style>
+:root {
+  color-scheme: dark;
+  --bg: #101318;
+  --panel: #191e26;
+  --line: #303846;
+  --text: #edf1f7;
+  --muted: #aab4c3;
+  --accent: #a8c7fa;
+  --preview-font-size: 16px;
+}
+
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--bg); color: var(--text); font: 16px/1.6 system-ui, -apple-system, Segoe UI, sans-serif; }
+main { width: min(1200px, 95vw); margin: 30px auto; }
+h1 { font-size: clamp(1.7rem, 4vw, 2.3rem); letter-spacing: -.03em; margin: 0 0 4px; }
+.sub { color: var(--muted); margin: 0 0 22px; }
+
+.grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; align-items: start; }
+.panel { min-width: 0; background: var(--panel); border: 1px solid var(--line); border-radius: 14px; padding: 14px; display: flex; flex-direction: column; }
+.head { display: flex; justify-content: space-between; align-items: center; gap: 8px; margin-bottom: 10px; font-weight: 700; flex-wrap: wrap; }
+.hint { font-size: .82rem; color: var(--muted); font-weight: 400; }
+
+textarea { display: block; width: 100%; min-height: 380px; resize: vertical; border: 1px solid var(--line); border-radius: 9px; padding: 13px; background: #0d1015; color: var(--text); font: 14px/1.65 ui-monospace, SFMono-Regular, Consolas, monospace; }
+
+/* Dynamic Responsive Preview Container */
+.preview-wrapper { display: flex; flex-direction: column; gap: 8px; flex: 1; }
+.preview {
+  min-height: 380px;
+  max-height: 70vh;
+  overflow: auto;
+  border: 1px solid var(--line);
+  border-radius: 9px;
+  padding: 1.15em;
+  background: #0d1015;
+  overflow-wrap: anywhere;
+  font-size: var(--preview-font-size);
+  line-height: 1.6;
+  transition: font-size 0.15s ease-out;
+}
+
+/* Ensure MathJax elements scale relative to text size */
+.preview mjx-container { font-size: 100% !important; }
+.preview mjx-container[display="true"] { overflow-x: auto; overflow-y: hidden; max-width: 100%; padding: 0.5em 0; margin: 0.8em 0 !important; }
+.preview p { margin: 0.6em 0; }
+
+/* Font size control bar */
+.controls-bar { display: flex; align-items: center; gap: 10px; font-size: 0.85rem; color: var(--muted); background: #13171e; padding: 6px 12px; border-radius: 8px; border: 1px solid var(--line); flex-wrap: wrap; }
+.controls-bar input[type="range"] { flex: 1; min-width: 80px; accent-color: var(--accent); cursor: pointer; }
+.controls-bar label { display: flex; align-items: center; gap: 6px; white-space: nowrap; }
+
+button { border: 1px solid var(--line); background: #252c37; color: var(--text); border-radius: 9px; padding: 8px 12px; font: inherit; cursor: pointer; display: inline-flex; align-items: center; gap: 6px; transition: background 0.15s; }
+button:hover { background: #303846; }
+button.primary { background: var(--accent); color: #101827; border-color: var(--accent); font-weight: 700; }
+button.primary:hover { background: #be329c; border-color: #be329c; color: #fff; }
+
+.toolbar { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 11px; }
+.status { min-height: 1.5em; color: var(--muted); font-size: .88rem; margin-top: 10px; }
+
+details { margin-top: 16px; color: var(--muted); background: var(--panel); border: 1px solid var(--line); border-radius: 12px; padding: 12px 15px; }
+summary { cursor: pointer; color: var(--text); font-weight: 650; }
+code { color: #c8d8ff; }
+
+/* Fullscreen Mode Styles */
+.panel.fullscreen {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: 9999;
+  border-radius: 0;
+  border: none;
+  padding: 24px;
+  background: var(--bg);
+}
+.panel.fullscreen .preview {
+  max-height: none;
+  flex: 1;
+  height: 100%;
+}
+.panel.fullscreen .head {
+  margin-bottom: 14px;
+}
+
+@media(max-width:760px) {
+  main { margin: 20px auto; }
+  .grid { grid-template-columns: 1fr; }
+  textarea, .preview { min-height: 280px; }
+}
+</style>
+</head>
+<body><main>
+<h1>Math Renderer</h1>
+<p class="sub">Paste messy AI output and preview the equations as properly typeset mathematics. Text stays in your browser; MathJax loads from the internet.</p>
+<div class="grid">
+<section class="panel">
+  <div class="head"><label for="source">Raw text / LaTeX</label><span class="hint">Input</span></div>
+  <textarea id="source" spellcheck="false" placeholder="Paste the answer containing \frac, \alpha, \[...\], etc."></textarea>
+  <div class="toolbar">
+    <button class="primary" id="render">Render preview</button>
+    <button id="example">Load example</button>
+    <button id="clear">Clear</button>
+  </div>
+</section>
+
+<section class="panel" id="previewPanel">
+  <div class="head">
+    <span>Rendered preview</span>
+    <div style="display:flex; gap:8px; align-items:center;">
+      <button id="toggleFullscreen" title="Toggle Fullscreen Mode">⛶ Fullscreen</button>
+      <span class="hint">Typeset output</span>
+    </div>
+  </div>
+
+  <div class="preview-wrapper">
+    <div class="controls-bar">
+      <label for="fontSizeRange">Font Size: <span id="fontSizeVal">16px</span></label>
+      <input type="range" id="fontSizeRange" min="12" max="36" value="16" step="1">
+      <button id="resetFontSize" style="padding: 2px 8px; font-size: 0.75rem;">Reset</button>
+    </div>
+    <div id="preview" class="preview" aria-live="polite">Your formatted answer will appear here.</div>
+  </div>
+
+  <div class="toolbar">
+    <button class="primary" id="copyTex">Copy cleaned LaTeX</button>
+    <button id="download">Download .html</button>
+  </div>
+  <div id="status" class="status" aria-live="polite"></div>
+</section>
+</div>
+
+<details>
+  <summary>How to format equations if they don't render automatically</summary>
+  <p>Inline math: <code>\(M=-\frac{f_o}{f_e}\)</code></p>
+  <p>Standalone equation: <code>\[M=-\frac{f_o}{f_e}\left(1+\frac{f_e}{D}\right)\]</code></p>
+  <p>If a pasted answer contains naked LaTeX commands without math delimiters, this tool attempts to detect common equations. Check the result: arbitrary text cannot always be distinguished from mathematical notation reliably.</p>
+</details>
+</main>
+
+<script>
+const $=id=>document.getElementById(id);
+const example=String.raw`The magnification is the ratio of the angle subtended by the final image to the angle subtended by the object.
+
+For an object at infinity, the angular magnification is:
+
+\[M=-\frac{f_o}{f_e}\]
+
+When the final image is formed at the least distance of distinct vision \(D\), the formula becomes:
+
+\[\boxed{M=-\frac{f_o}{f_e}\left(1+\frac{f_e}{D}\right)}\]
+
+Here, \(f_o\) is the focal length of the objective, \(f_e\) is the focal length of the eyepiece, and \(D\) is the near-point distance.`;
+
+function escapeHtml(s){return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+function decode(s){
+  const el=document.createElement('textarea');
+  for(let i=0;i<3;i++){el.innerHTML=s;const n=el.value;if(n===s)break;s=n;}
+  return s;
+}
+
+function prepare(raw){
+  let s=decode(raw.replace(/\r\n?/g,'\n'));
+  s=s.replace(/<\s*br\s*\/?\s*>/gi,'\n')
+     .replace(/<\/\s*(p|div|li|h[1-6])\s*>/gi,'\n')
+     .replace(/\\(?:&#xA;|&#10;|n\b)/gi,'\n')
+     .replace(/&#xA;|&#10;/gi,'\n')
+     .replace(/&#x20;|&nbsp;/gi,' ')
+     .replace(/\\[ \t]*(?=\n|$)/g,'')
+     .replace(/[ \t]+\n/g,'\n')
+     .replace(/\n{3,}/g,'\n\n')
+     .trim();
+  s=s.replace(/\b([fuh])\s*\*\s*\{\s*([a-z])\s*\}/g,'$1_{$2}')
+     .replace(/\b([fuh])\s*\{\s*([a-z])\s*\}/g,'$1_{$2}');
+  const hasMathDelimiters=/\\\(|\\\[|\$\$|(^|[^\\])\$(?!\s)/m.test(s);
+  if(!hasMathDelimiters){
+    s=s.split('\n').map(line=>{
+      const t=line.trim();
+      if(t && /\\(?:frac|sqrt|alpha|beta|theta|tan|sin|cos|left|right|cdot|times|boxed|sum|int|approx|infty|pm|Delta|omega)\b/.test(t)){
+        return '\\['+t+'\\]';
+      }
+      return line;
+    }).join('\n');
+  }
+  return s.split(/\n\s*\n/).map(block=>{
+    const b=block.trim();
+    if(!b)return '';
+    if(/^\\\[(.|\n)*\\\]$/.test(b)||/^\$\$(.|\n)*\$\$$/.test(b)) return b;
+    return '<p>'+escapeHtml(b).replace(/\n/g,'<br>')+'</p>';
+  }).join('\n');
+}
+
+async function render(){
+  const raw=$('source').value;
+  if(!raw.trim()){$('preview').textContent='Paste some text first.';return;}
+  if(!window.MathJax || !MathJax.typesetPromise){
+    $('preview').textContent=raw;
+    $('status').textContent='Math rendering library is still loading, or the network is unavailable. Try again in a moment.';
+    return;
+  }
+  $('preview').innerHTML=prepare(raw);
+  try{
+    if(MathJax.typesetClear) MathJax.typesetClear([$('preview')]);
+    await MathJax.typesetPromise([$('preview')]);
+    $('status').textContent='Preview rendered. Review equation structure and signs before relying on it.';
+  }catch(e){$('status').textContent='Some LaTeX could not be rendered. Check the delimiters or equation syntax.';}
+}
+
+/* Dynamic Font Size Adjustment */
+const fontSizeRange = $('fontSizeRange');
+const fontSizeVal = $('fontSizeVal');
+
+function updateFontSize(val) {
+  document.documentElement.style.setProperty('--preview-font-size', val + 'px');
+  fontSizeVal.textContent = val + 'px';
+  fontSizeRange.value = val;
+}
+
+fontSizeRange.addEventListener('input', (e) => updateFontSize(e.target.value));
+$('resetFontSize').addEventListener('click', () => updateFontSize(16));
+
+/* Fullscreen Toggle Logic */
+const previewPanel = $('previewPanel');
+const toggleFsBtn = $('toggleFullscreen');
+
+function setFullscreen(enable) {
+  if (enable) {
+    previewPanel.classList.add('fullscreen');
+    toggleFsBtn.textContent = '🗗 Exit Fullscreen';
+  } else {
+    previewPanel.classList.remove('fullscreen');
+    toggleFsBtn.textContent = '⛶ Fullscreen';
+  }
+}
+
+toggleFsBtn.addEventListener('click', () => {
+  const isFs = previewPanel.classList.contains('fullscreen');
+  setFullscreen(!isFs);
+});
+
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'Escape' && previewPanel.classList.contains('fullscreen')) {
+    setFullscreen(false);
+  }
+});
+
+/* Main Actions */
+$('render').addEventListener('click', render);
+$('example').addEventListener('click', () => { $('source').value = example; render(); });
+$('clear').addEventListener('click', () => { $('source').value = ''; $('preview').textContent = 'Your formatted answer will appear here.'; $('status').textContent = ''; });
+$('copyTex').addEventListener('click', async () => {
+  try { await navigator.clipboard.writeText($('source').value); $('status').textContent = 'Copied original/cleaned LaTeX text.'; }
+  catch { $('source').focus(); $('source').select(); $('status').textContent = 'Clipboard blocked; input selected. Press Ctrl+C.'; }
+});
+$('download').addEventListener('click', () => {
+  const content = '<!doctype html><html><head><meta charset="utf-8"><title>Rendered Math</title><script>window.MathJax={tex:{inlineMath:[[\'\\\\(\',\'\\\\)\'],[\'$\',\'$\']],displayMath:[[\'\\\\[\',\'\\\\]\'],[\'$$\',\'$$\']]}};<\/script><script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"><\/script></head><body>' + prepare($('source').value) + '</body></html>';
+  const url = URL.createObjectURL(new Blob([content], { type: 'text/html;charset=utf-8' }));
+  const a = document.createElement('a'); a.href = url; a.download = 'rendered-math.html'; a.click();
+  setTimeout(() => URL.revokeObjectURL(url), 1000);
+  $('status').textContent = 'HTML file downloaded; internet is needed to render its equations.';
+});
+</script>
+</body>
+</html>
