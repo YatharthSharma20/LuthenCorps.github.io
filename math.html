@@ -25,7 +25,13 @@
   --text: #edf1f7;
   --muted: #aab4c3;
   --accent: #a8c7fa;
-  --preview-font-size: 16px;
+  
+  /* Sizing & Spacing Variables */
+  --global-scale: 1;
+  --text-font-size: 16px;
+  --math-scale: 1;
+  --preview-line-height: 1.6;
+  --preview-paragraph-gap: 0.8em;
 }
 
 * { box-sizing: border-box; }
@@ -42,30 +48,45 @@ h1 { font-size: clamp(1.7rem, 4vw, 2.3rem); letter-spacing: -.03em; margin: 0 0 
 textarea { display: block; width: 100%; min-height: 380px; resize: vertical; border: 1px solid var(--line); border-radius: 9px; padding: 13px; background: #0d1015; color: var(--text); font: 14px/1.65 ui-monospace, SFMono-Regular, Consolas, monospace; }
 
 /* Dynamic Responsive Preview Container */
-.preview-wrapper { display: flex; flex-direction: column; gap: 8px; flex: 1; }
+.preview-wrapper { display: flex; flex-direction: column; gap: 8px; flex: 1; min-height: 0; }
 .preview {
   min-height: 380px;
   max-height: 70vh;
-  overflow: auto;
+  overflow-y: auto;
+  overflow-x: auto;
   border: 1px solid var(--line);
   border-radius: 9px;
   padding: 1.15em;
   background: #0d1015;
   overflow-wrap: anywhere;
-  font-size: var(--preview-font-size);
-  line-height: 1.6;
-  transition: font-size 0.15s ease-out;
+  
+  /* Apply font sizing and global scaling */
+  font-size: calc(var(--text-font-size) * var(--global-scale));
+  line-height: var(--preview-line-height);
 }
 
-/* Ensure MathJax elements scale relative to text size */
-.preview mjx-container { font-size: 100% !important; }
-.preview mjx-container[display="true"] { overflow-x: auto; overflow-y: hidden; max-width: 100%; padding: 0.5em 0; margin: 0.8em 0 !important; }
-.preview p { margin: 0.6em 0; }
+/* MathJax Elements Sizing (Independent Math Scale + Global Scale) */
+.preview mjx-container {
+  font-size: calc(var(--math-scale) * 1em) !important;
+}
+.preview mjx-container[display="true"] {
+  overflow-x: auto;
+  overflow-y: hidden;
+  max-width: 100%;
+  padding: 0.5em 0;
+  margin: var(--preview-paragraph-gap) 0 !important;
+}
+.preview p {
+  margin-top: 0;
+  margin-bottom: var(--preview-paragraph-gap);
+}
+.preview p:last-child { margin-bottom: 0; }
 
-/* Font size control bar */
-.controls-bar { display: flex; align-items: center; gap: 10px; font-size: 0.85rem; color: var(--muted); background: #13171e; padding: 6px 12px; border-radius: 8px; border: 1px solid var(--line); flex-wrap: wrap; }
-.controls-bar input[type="range"] { flex: 1; min-width: 80px; accent-color: var(--accent); cursor: pointer; }
-.controls-bar label { display: flex; align-items: center; gap: 6px; white-space: nowrap; }
+/* Controls Bar */
+.controls-bar { display: flex; flex-direction: column; gap: 6px; font-size: 0.8rem; color: var(--muted); background: #13171e; padding: 10px 12px; border-radius: 8px; border: 1px solid var(--line); }
+.control-row { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+.control-row label { display: flex; align-items: center; gap: 6px; white-space: nowrap; flex: 1; min-width: 155px; }
+.control-row input[type="range"] { flex: 2; min-width: 80px; accent-color: var(--accent); cursor: pointer; }
 
 button { border: 1px solid var(--line); background: #252c37; color: var(--text); border-radius: 9px; padding: 8px 12px; font: inherit; cursor: pointer; display: inline-flex; align-items: center; gap: 6px; transition: background 0.15s; }
 button:hover { background: #303846; }
@@ -89,16 +110,21 @@ code { color: #c8d8ff; }
   z-index: 9999;
   border-radius: 0;
   border: none;
-  padding: 24px;
+  padding: 20px;
   background: var(--bg);
+  display: flex;
+  flex-direction: column;
+}
+.panel.fullscreen .preview-wrapper {
+  flex: 1;
+  min-height: 0;
 }
 .panel.fullscreen .preview {
   max-height: none;
-  flex: 1;
   height: 100%;
 }
 .panel.fullscreen .head {
-  margin-bottom: 14px;
+  margin-bottom: 10px;
 }
 
 @media(max-width:760px) {
@@ -133,9 +159,27 @@ code { color: #c8d8ff; }
 
   <div class="preview-wrapper">
     <div class="controls-bar">
-      <label for="fontSizeRange">Font Size: <span id="fontSizeVal">16px</span></label>
-      <input type="range" id="fontSizeRange" min="12" max="36" value="16" step="1">
-      <button id="resetFontSize" style="padding: 2px 8px; font-size: 0.75rem;">Reset</button>
+      <div class="control-row">
+        <label for="globalScaleRange">Global Scale: <span id="globalScaleVal">100%</span></label>
+        <input type="range" id="globalScaleRange" min="50" max="200" value="100" step="5">
+      </div>
+      <div class="control-row">
+        <label for="fontSizeRange">Normal Text Size: <span id="fontSizeVal">16px</span></label>
+        <input type="range" id="fontSizeRange" min="12" max="32" value="16" step="1">
+      </div>
+      <div class="control-row">
+        <label for="mathSizeRange">LaTeX / Math Size: <span id="mathSizeVal">100%</span></label>
+        <input type="range" id="mathSizeRange" min="70" max="200" value="100" step="5">
+      </div>
+      <div class="control-row">
+        <label for="lineHeightRange">Line Wrap Spacing: <span id="lineHeightVal">1.6</span></label>
+        <input type="range" id="lineHeightRange" min="1.1" max="2.6" value="1.6" step="0.1">
+      </div>
+      <div class="control-row">
+        <label for="paraGapRange">Enter / Paragraph Gap: <span id="paraGapVal">0.8em</span></label>
+        <input type="range" id="paraGapRange" min="0" max="3" value="0.8" step="0.2">
+        <button id="resetSpacing" style="padding: 2px 8px; font-size: 0.75rem;">Reset All</button>
+      </div>
     </div>
     <div id="preview" class="preview" aria-live="polite">Your formatted answer will appear here.</div>
   </div>
@@ -224,18 +268,51 @@ async function render(){
   }catch(e){$('status').textContent='Some LaTeX could not be rendered. Check the delimiters or equation syntax.';}
 }
 
-/* Dynamic Font Size Adjustment */
+/* Controls Logic */
+const globalScaleRange = $('globalScaleRange');
+const globalScaleVal = $('globalScaleVal');
 const fontSizeRange = $('fontSizeRange');
 const fontSizeVal = $('fontSizeVal');
+const mathSizeRange = $('mathSizeRange');
+const mathSizeVal = $('mathSizeVal');
+const lineHeightRange = $('lineHeightRange');
+const lineHeightVal = $('lineHeightVal');
+const paraGapRange = $('paraGapRange');
+const paraGapVal = $('paraGapVal');
 
-function updateFontSize(val) {
-  document.documentElement.style.setProperty('--preview-font-size', val + 'px');
-  fontSizeVal.textContent = val + 'px';
-  fontSizeRange.value = val;
+function updateStyles() {
+  const root = document.documentElement;
+
+  root.style.setProperty('--global-scale', globalScaleRange.value / 100);
+  globalScaleVal.textContent = globalScaleRange.value + '%';
+
+  root.style.setProperty('--text-font-size', fontSizeRange.value + 'px');
+  fontSizeVal.textContent = fontSizeRange.value + 'px';
+
+  root.style.setProperty('--math-scale', mathSizeRange.value / 100);
+  mathSizeVal.textContent = mathSizeRange.value + '%';
+
+  root.style.setProperty('--preview-line-height', lineHeightRange.value);
+  lineHeightVal.textContent = lineHeightRange.value;
+
+  root.style.setProperty('--preview-paragraph-gap', paraGapRange.value + 'em');
+  paraGapVal.textContent = paraGapRange.value + 'em';
 }
 
-fontSizeRange.addEventListener('input', (e) => updateFontSize(e.target.value));
-$('resetFontSize').addEventListener('click', () => updateFontSize(16));
+globalScaleRange.addEventListener('input', updateStyles);
+fontSizeRange.addEventListener('input', updateStyles);
+mathSizeRange.addEventListener('input', updateStyles);
+lineHeightRange.addEventListener('input', updateStyles);
+paraGapRange.addEventListener('input', updateStyles);
+
+$('resetSpacing').addEventListener('click', () => {
+  globalScaleRange.value = 100;
+  fontSizeRange.value = 16;
+  mathSizeRange.value = 100;
+  lineHeightRange.value = 1.6;
+  paraGapRange.value = 0.8;
+  updateStyles();
+});
 
 /* Fullscreen Toggle Logic */
 const previewPanel = $('previewPanel');
