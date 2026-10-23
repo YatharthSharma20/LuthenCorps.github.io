@@ -83,7 +83,9 @@ textarea { display: block; width: 100%; min-height: 380px; resize: vertical; bor
 .preview p:last-child { margin-bottom: 0; }
 
 /* Controls Bar */
-.controls-bar { display: flex; flex-direction: column; gap: 6px; font-size: 0.8rem; color: var(--muted); background: #13171e; padding: 10px 12px; border-radius: 8px; border: 1px solid var(--line); }
+.controls-bar { display: flex; flex-direction: column; gap: 6px; font-size: 0.8rem; color: var(--muted); background: #13171e; padding: 10px 12px; border-radius: 8px; border: 1px solid var(--line); transition: all 0.2s ease; }
+.controls-bar.hidden { display: none !important; }
+
 .control-row { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
 .control-row label { display: flex; align-items: center; gap: 6px; white-space: nowrap; flex: 1; min-width: 155px; }
 .control-row input[type="range"] { flex: 2; min-width: 80px; accent-color: var(--accent); cursor: pointer; }
@@ -151,14 +153,14 @@ code { color: #c8d8ff; }
 <section class="panel" id="previewPanel">
   <div class="head">
     <span>Rendered preview</span>
-    <div style="display:flex; gap:8px; align-items:center;">
+    <div style="display:flex; gap:8px; align-items:center; flex-wrap:wrap;">
+      <button id="toggleControls" title="Show or Hide Sliders">⚙️ Hide Sliders</button>
       <button id="toggleFullscreen" title="Toggle Fullscreen Mode">⛶ Fullscreen</button>
-      <span class="hint">Typeset output</span>
     </div>
   </div>
 
   <div class="preview-wrapper">
-    <div class="controls-bar">
+    <div id="controlsBar" class="controls-bar">
       <div class="control-row">
         <label for="globalScaleRange">Global Scale: <span id="globalScaleVal">100%</span></label>
         <input type="range" id="globalScaleRange" min="50" max="200" value="100" step="5">
@@ -312,6 +314,15 @@ $('resetSpacing').addEventListener('click', () => {
   lineHeightRange.value = 1.6;
   paraGapRange.value = 0.8;
   updateStyles();
+});
+
+/* Toggle Sliders/Controls Visibility */
+const toggleControlsBtn = $('toggleControls');
+const controlsBar = $('controlsBar');
+toggleControlsBtn.addEventListener('click', () => {
+  controlsBar.classList.toggle('hidden');
+  const isHidden = controlsBar.classList.contains('hidden');
+  toggleControlsBtn.textContent = isHidden ? '⚙️ Show Sliders' : '⚙️ Hide Sliders';
 });
 
 /* Fullscreen Toggle Logic */
